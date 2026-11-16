@@ -1,0 +1,491 @@
+{
+  "_comment": "Seeded from the adFactory Model Comparison study (spec 9.1). Vendor and origin were filled in from the model name; check them against the study. Edit this file to change the catalog.",
+  "models": [
+    {
+      "id": "gpt-6-astra",
+      "name": "gpt-6-astra",
+      "vendor": "OpenAI",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "gemini-3.8-flash",
+      "name": "gemini-3.8-flash",
+      "vendor": "Google",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "claude-opus-5",
+      "name": "claude-opus-5",
+      "vendor": "Anthropic",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "gpt-5.6-sol",
+      "name": "gpt-5.6-sol",
+      "vendor": "OpenAI",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "claude-fable-5",
+      "name": "claude-fable-5",
+      "vendor": "Anthropic",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "grok-4.6",
+      "name": "grok-4.6",
+      "vendor": "xAI",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "gpt-5.6-luna",
+      "name": "gpt-5.6-luna",
+      "vendor": "OpenAI",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "gpt-5.5",
+      "name": "gpt-5.5",
+      "vendor": "OpenAI",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "gemini-3.7-flash",
+      "name": "gemini-3.7-flash",
+      "vendor": "Google",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "claude-opus-4.8",
+      "name": "claude-opus-4.8",
+      "vendor": "Anthropic",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "muse-spark-1.2",
+      "name": "muse-spark-1.2",
+      "vendor": "Meta",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "claude-sonnet-5",
+      "name": "claude-sonnet-5",
+      "vendor": "Anthropic",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "gemini-3.6-flash",
+      "name": "gemini-3.6-flash",
+      "vendor": "Google",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "muse-spark-1.1",
+      "name": "Muse Spark 1.1",
+      "vendor": "Meta",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "gpt-5.4",
+      "name": "gpt-5.4",
+      "vendor": "OpenAI",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "muse-spark",
+      "name": "Muse Spark",
+      "vendor": "Meta",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "claude-opus-4.6",
+      "name": "claude-opus-4.6",
+      "vendor": "Anthropic",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "claude-opus-4.5",
+      "name": "claude-opus-4.5",
+      "vendor": "Anthropic",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": true
+    },
+    {
+      "id": "glm-5.3",
+      "name": "glm-5.3",
+      "vendor": "Zhipu AI",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "kimi-k3",
+      "name": "kimi-k3",
+      "vendor": "Moonshot AI",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "glm-5.3-flash",
+      "name": "glm-5.3-flash",
+      "vendor": "Zhipu AI",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "deepseek-v4-pro",
+      "name": "deepseek-v4-pro",
+      "vendor": "DeepSeek",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "qwen3.8-max",
+      "name": "qwen3.8-max",
+      "vendor": "Alibaba",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "deepseek-v4-flash",
+      "name": "deepseek-v4-flash",
+      "vendor": "DeepSeek",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Native",
+      "borderline": false
+    },
+    {
+      "id": "glm-5.2",
+      "name": "glm-5.2",
+      "vendor": "Zhipu AI",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Native",
+      "borderline": true
+    },
+    {
+      "id": "claude-sonnet-4.5",
+      "name": "claude-sonnet-4.5",
+      "vendor": "Anthropic",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "gemini-3-pro-preview",
+      "name": "gemini-3-pro-preview",
+      "vendor": "Google",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "claude-sonnet-4",
+      "name": "claude-sonnet-4",
+      "vendor": "Anthropic",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "gpt-5",
+      "name": "gpt-5",
+      "vendor": "OpenAI",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "gpt-5.2-codex",
+      "name": "gpt-5.2-codex",
+      "vendor": "OpenAI",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "claude-haiku-4.5",
+      "name": "claude-haiku-4.5",
+      "vendor": "Anthropic",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "qwen3-coder-480b-a35b",
+      "name": "qwen3-coder-480b-a35b",
+      "vendor": "Alibaba",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "minimax-2.1",
+      "name": "minimax-2.1",
+      "vendor": "MiniMax",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "gemini-3.5-flash",
+      "name": "gemini-3.5-flash",
+      "vendor": "Google",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "gemini-3-flash",
+      "name": "gemini-3-flash",
+      "vendor": "Google",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "claude-sonnet-4.6",
+      "name": "claude-sonnet-4.6",
+      "vendor": "Anthropic",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "gemini-3.1-pro",
+      "name": "gemini-3.1-pro",
+      "vendor": "Google",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": false
+    },
+    {
+      "id": "gpt-5.2",
+      "name": "gpt-5.2",
+      "vendor": "OpenAI",
+      "origin": "USA",
+      "licence": "Closed",
+      "tier": "Not Recommended",
+      "borderline": false
+    },
+    {
+      "id": "kimi-k2-instruct",
+      "name": "kimi-k2-instruct",
+      "vendor": "Moonshot AI",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "Not Recommended",
+      "borderline": false
+    },
+    {
+      "id": "qwen3-235b-a22b",
+      "name": "qwen3-235b-a22b",
+      "vendor": "Alibaba",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "Not Recommended",
+      "borderline": false
+    },
+    {
+      "id": "gpt-oss-120b",
+      "name": "gpt-oss-120b",
+      "vendor": "OpenAI",
+      "origin": "USA",
+      "licence": "Open weights",
+      "tier": "Not Recommended",
+      "borderline": false
+    },
+    {
+      "id": "deepseek-v3.2",
+      "name": "deepseek-v3.2",
+      "vendor": "DeepSeek",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "Not Recommended",
+      "borderline": false
+    },
+    {
+      "id": "gemma-3-27b-it",
+      "name": "gemma-3-27b-it",
+      "vendor": "Google",
+      "origin": "USA",
+      "licence": "Open weights",
+      "tier": "Not Recommended",
+      "borderline": false
+    },
+    {
+      "id": "llama-3.1-405b-instruct",
+      "name": "llama-3.1-405b-instruct",
+      "vendor": "Meta",
+      "origin": "USA",
+      "licence": "Open weights",
+      "tier": "Not Recommended",
+      "borderline": false
+    },
+    {
+      "id": "glm-4.6",
+      "name": "glm-4.6",
+      "vendor": "Zhipu AI",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "Not Recommended",
+      "borderline": false
+    },
+    {
+      "id": "llama-4-maverick",
+      "name": "llama-4-maverick",
+      "vendor": "Meta",
+      "origin": "USA",
+      "licence": "Open weights",
+      "tier": "Not Recommended",
+      "borderline": false
+    },
+    {
+      "id": "codestral-2405",
+      "name": "codestral-2405",
+      "vendor": "Mistral AI",
+      "origin": "France",
+      "licence": "Open weights",
+      "tier": "Not Recommended",
+      "borderline": false
+    },
+    {
+      "id": "k2-horizon-375b-a23b",
+      "name": "K2 Horizon 375B-A23B",
+      "vendor": "MBZUAI",
+      "origin": "UAE",
+      "licence": "UAE sovereign",
+      "tier": "Unproven",
+      "borderline": false
+    },
+    {
+      "id": "k2-think-v2",
+      "name": "K2 Think V2",
+      "vendor": "MBZUAI",
+      "origin": "UAE",
+      "licence": "UAE sovereign",
+      "tier": "Unproven",
+      "borderline": false
+    },
+    {
+      "id": "k2-horizon-36b-a4b",
+      "name": "K2 Horizon 36B-A4B",
+      "vendor": "MBZUAI",
+      "origin": "UAE",
+      "licence": "UAE sovereign",
+      "tier": "Unproven",
+      "borderline": false
+    },
+    {
+      "id": "k2-horizon-32b",
+      "name": "K2 Horizon 32B",
+      "vendor": "MBZUAI",
+      "origin": "UAE",
+      "licence": "UAE sovereign",
+      "tier": "Unproven",
+      "borderline": false
+    },
+    {
+      "id": "falcon-h1r-7b",
+      "name": "Falcon H1R-7B",
+      "vendor": "TII",
+      "origin": "UAE",
+      "licence": "UAE sovereign",
+      "tier": "Unproven",
+      "borderline": false
+    },
+    {
+      "id": "jais-2",
+      "name": "Jais 2",
+      "vendor": "Inception (G42)",
+      "origin": "UAE",
+      "licence": "UAE sovereign",
+      "tier": "Unproven",
+      "borderline": false
+    },
+    {
+      "id": "falcon-3-3b",
+      "name": "Falcon 3-3B",
+      "vendor": "TII",
+      "origin": "UAE",
+      "licence": "UAE sovereign",
+      "tier": "Unproven",
+      "borderline": false
+    }
+  ]
+}
