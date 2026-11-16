@@ -245,3 +245,17 @@ describe("inputs in effect and overrides", () => {
     expect((performance.now() - t0) / 100).toBeLessThan(200);
   });
 });
+
+describe("model catalog (adFactory Model Comparison study)", () => {
+  it("has the study's tiers and borderline flags", () => {
+    const count = (tier: string) => modelCatalog.filter((m) => m.tier === tier).length;
+    expect([count("AI Native"), count("AI Assisted"), count("Not Recommended"), count("Unproven")]).toEqual([25, 12, 10, 7]);
+    const borderlineNative = modelCatalog.filter((m) => m.tier === "AI Native" && m.borderline).map((m) => m.id);
+    expect(borderlineNative.sort()).toEqual(["claude-opus-4.5", "glm-5.2"]);
+    // The study puts gemini-3.1-pro at the AI Native bar on one benchmark but says to treat it as AI Assisted.
+    expect(modelCatalog.find((m) => m.id === "gemini-3.1-pro")?.tier).toBe("AI Assisted");
+    expect(calculate({ ...workedExample(), allowedModelIds: ["gemini-3.1-pro"] }, config, modelCatalog).modelInEffect.M).toBe(0.5);
+    // Every non-Unproven model carries the benchmark score that placed it.
+    for (const m of modelCatalog) if (m.tier !== "Unproven") expect(m.score).toBeTruthy();
+  });
+});

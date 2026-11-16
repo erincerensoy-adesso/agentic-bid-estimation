@@ -165,12 +165,12 @@ export async function buildReport(
 
   // Inputs
   const inp = wb.addWorksheet("Inputs");
-  widths(inp, [40, 18, 16, 22, 50]);
+  widths(inp, [40, 24, 16, 22, 50, 22, 14, 60]);
   inp.addRow(["Allowed models"]).font = { bold: true };
-  headerRow(inp, ["Model", "Vendor", "Licence", "Tier", "Borderline"]);
+  headerRow(inp, ["Model", "Vendor (origin)", "Licence", "Tier", "Borderline", "Benchmark", "Score", "Notes"]);
   for (const id of input.allowedModelIds) {
     const m = catalog.find((x) => x.id === id);
-    if (m) inp.addRow([m.name, m.vendor, m.licence, m.tier, m.borderline ? "Yes" : "No"]);
+    if (m) inp.addRow([m.name, `${m.vendor} (${m.origin})`, m.licence, m.tier, m.borderline ? "Yes" : "No", m.benchmark ?? "", m.score ?? "", m.notes]);
   }
   inp.addRow([]);
   inp.addRow(["Allowed harnesses"]).font = { bold: true };

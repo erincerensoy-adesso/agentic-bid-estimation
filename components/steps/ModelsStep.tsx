@@ -17,7 +17,7 @@ export function ModelsStep({ state, dispatch, result }: { state: BidState; dispa
   const vendors = useMemo(() => [...new Set(modelCatalog.map((m) => m.vendor))].sort(), []);
   const filtered = modelCatalog.filter(
     (m) =>
-      (!q || `${m.name} ${m.vendor}`.toLowerCase().includes(q.toLowerCase())) &&
+      (!q || `${m.name} ${m.vendor} ${m.notes}`.toLowerCase().includes(q.toLowerCase())) &&
       (!vendor || m.vendor === vendor) &&
       (!licence || m.licence === licence) &&
       (!tier || m.tier === tier),
@@ -85,7 +85,7 @@ export function ModelsStep({ state, dispatch, result }: { state: BidState; dispa
         <div className="table-wrap tall">
           <table>
             <thead>
-              <tr><th></th><th>Model</th><th>Vendor</th><th>Origin</th><th>Licence</th><th>Model tier</th></tr>
+              <tr><th></th><th>Model</th><th>Vendor (origin)</th><th>Licence</th><th>Model tier</th><th>Score</th><th>Notes</th></tr>
             </thead>
             <tbody>
               {filtered.map((m) => (
@@ -99,13 +99,18 @@ export function ModelsStep({ state, dispatch, result }: { state: BidState; dispa
                     />
                   </td>
                   <td>{m.name}</td>
-                  <td>{m.vendor}</td>
-                  <td>{m.origin}</td>
+                  <td>{m.vendor} ({m.origin})</td>
                   <td>{m.licence}</td>
                   <td>
                     <span className={`tier tier-${m.tier.replace(/\s/g, "-").toLowerCase()}`}>{m.tier}</span>
-                    {m.borderline && <span className="pill" title="Flagged borderline in the study (M = 0.85)">borderline</span>}
+                    {m.borderline && (
+                      <span className="pill" title={m.tier === "AI Native" ? "Flagged borderline in the study (M = 0.85)" : "Flagged borderline in the study"}>
+                        borderline
+                      </span>
+                    )}
                   </td>
+                  <td>{m.score ? <>{m.score} <span className="muted small">{m.benchmark}</span></> : <span className="muted">—</span>}</td>
+                  <td className="notes">{m.notes}</td>
                 </tr>
               ))}
             </tbody>

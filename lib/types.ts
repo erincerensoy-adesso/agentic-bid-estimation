@@ -49,7 +49,13 @@ export interface ModelEntry {
   origin: string;
   licence: "Closed" | "Open weights" | "UAE sovereign";
   tier: ModelTier;
+  /** Flagged borderline in the study. Only changes M for AI Native models. */
   borderline: boolean;
+  /** Benchmark that placed the model in its tier, as stated in the study. */
+  benchmark: string | null;
+  score: string | null;
+  effort: string | null;
+  notes: string;
 }
 
 export interface HarnessEntry {

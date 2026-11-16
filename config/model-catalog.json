@@ -1,194 +1,161 @@
 {
-  "_comment": "Seeded from the adFactory Model Comparison study (spec 9.1). Vendor and origin were filled in from the model name; check them against the study. Edit this file to change the catalog.",
+  "_comment": "Seeded from the adFactory Model Comparison study (spec 9.1): tier rule AI Native at >= 45% Scale-run SWE-Bench Pro or >= 40% DeepSWE v1.1; AI Assisted at 30-45% or 25-40%; below that Not Recommended; no qualifying score = Unproven. 'borderline' follows the study's explicit flags; it only changes M for AI Native models. Edit this file to change the catalog.",
   "models": [
     {
       "id": "gpt-6-astra",
       "name": "gpt-6-astra",
       "vendor": "OpenAI",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "74% ±3",
+      "effort": "xhigh",
+      "notes": "$4.43 per task"
     },
     {
       "id": "gemini-3.8-flash",
       "name": "gemini-3.8-flash",
       "vendor": "Google",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "74% ±1",
+      "effort": "high",
+      "notes": "$2.36 per task"
     },
     {
       "id": "claude-opus-5",
       "name": "claude-opus-5",
       "vendor": "Anthropic",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "74% ±4",
+      "effort": "max",
+      "notes": "$11.84 per task"
     },
     {
       "id": "gpt-5.6-sol",
       "name": "gpt-5.6-sol",
       "vendor": "OpenAI",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "73% ±3",
+      "effort": "max",
+      "notes": "$6.46 per task"
     },
     {
       "id": "claude-fable-5",
       "name": "claude-fable-5",
       "vendor": "Anthropic",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "70% ±3",
+      "effort": "xhigh",
+      "notes": "$13.41 per task"
+    },
+    {
+      "id": "glm-5.3",
+      "name": "glm-5.3",
+      "vendor": "Z.ai / Zhipu",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Native",
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "69% ±3",
+      "effort": "max",
+      "notes": "$3.99 per task; custom glm-5.3 licence, commercial use allowed; 753B MoE"
+    },
+    {
+      "id": "kimi-k3",
+      "name": "kimi-k3",
+      "vendor": "Moonshot",
+      "origin": "China",
+      "licence": "Open weights",
+      "tier": "AI Native",
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "69% ±5",
+      "effort": "max",
+      "notes": "$4.65 per task; custom Kimi K3 licence; 2.8T parameters, needs very large infrastructure"
     },
     {
       "id": "grok-4.6",
       "name": "grok-4.6",
       "vendor": "xAI",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "67% ±2",
+      "effort": "medium",
+      "notes": "$3.45 per task"
     },
     {
       "id": "gpt-5.6-luna",
       "name": "gpt-5.6-luna",
       "vendor": "OpenAI",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "67% ±4",
+      "effort": "max",
+      "notes": "$0.61 per task"
     },
     {
       "id": "gpt-5.5",
       "name": "gpt-5.5",
       "vendor": "OpenAI",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "67% ±6",
+      "effort": "xhigh",
+      "notes": "$7.23 per task"
     },
     {
       "id": "gemini-3.7-flash",
       "name": "gemini-3.7-flash",
       "vendor": "Google",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Native",
-      "borderline": false
-    },
-    {
-      "id": "claude-opus-4.8",
-      "name": "claude-opus-4.8",
-      "vendor": "Anthropic",
-      "origin": "USA",
-      "licence": "Closed",
-      "tier": "AI Native",
-      "borderline": false
-    },
-    {
-      "id": "muse-spark-1.2",
-      "name": "muse-spark-1.2",
-      "vendor": "Meta",
-      "origin": "USA",
-      "licence": "Closed",
-      "tier": "AI Native",
-      "borderline": false
-    },
-    {
-      "id": "claude-sonnet-5",
-      "name": "claude-sonnet-5",
-      "vendor": "Anthropic",
-      "origin": "USA",
-      "licence": "Closed",
-      "tier": "AI Native",
-      "borderline": false
-    },
-    {
-      "id": "gemini-3.6-flash",
-      "name": "gemini-3.6-flash",
-      "vendor": "Google",
-      "origin": "USA",
-      "licence": "Closed",
-      "tier": "AI Native",
-      "borderline": false
-    },
-    {
-      "id": "muse-spark-1.1",
-      "name": "Muse Spark 1.1",
-      "vendor": "Meta",
-      "origin": "USA",
-      "licence": "Closed",
-      "tier": "AI Native",
-      "borderline": false
-    },
-    {
-      "id": "gpt-5.4",
-      "name": "gpt-5.4",
-      "vendor": "OpenAI",
-      "origin": "USA",
-      "licence": "Closed",
-      "tier": "AI Native",
-      "borderline": false
-    },
-    {
-      "id": "muse-spark",
-      "name": "Muse Spark",
-      "vendor": "Meta",
-      "origin": "USA",
-      "licence": "Closed",
-      "tier": "AI Native",
-      "borderline": false
-    },
-    {
-      "id": "claude-opus-4.6",
-      "name": "claude-opus-4.6",
-      "vendor": "Anthropic",
-      "origin": "USA",
-      "licence": "Closed",
-      "tier": "AI Native",
-      "borderline": false
-    },
-    {
-      "id": "claude-opus-4.5",
-      "name": "claude-opus-4.5",
-      "vendor": "Anthropic",
-      "origin": "USA",
-      "licence": "Closed",
-      "tier": "AI Native",
-      "borderline": true
-    },
-    {
-      "id": "glm-5.3",
-      "name": "glm-5.3",
-      "vendor": "Zhipu AI",
-      "origin": "China",
-      "licence": "Open weights",
-      "tier": "AI Native",
-      "borderline": false
-    },
-    {
-      "id": "kimi-k3",
-      "name": "kimi-k3",
-      "vendor": "Moonshot AI",
-      "origin": "China",
-      "licence": "Open weights",
-      "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "65% ±3",
+      "effort": "medium",
+      "notes": "$2.03 per task"
     },
     {
       "id": "glm-5.3-flash",
       "name": "glm-5.3-flash",
-      "vendor": "Zhipu AI",
+      "vendor": "Z.ai / Zhipu",
       "origin": "China",
       "licence": "Open weights",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "63% ±4",
+      "effort": "max",
+      "notes": "$0.24 per task; MIT; 320B total / 18B active"
     },
     {
       "id": "deepseek-v4-pro",
@@ -197,7 +164,24 @@
       "origin": "China",
       "licence": "Open weights",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "63% ±6",
+      "effort": "max",
+      "notes": "$1.67 per task; MIT; 1.6T total / 49B active"
+    },
+    {
+      "id": "claude-opus-4.8",
+      "name": "claude-opus-4.8",
+      "vendor": "Anthropic",
+      "origin": "US",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "59% ±2",
+      "effort": "max",
+      "notes": "$13.22 per task"
     },
     {
       "id": "qwen3.8-max",
@@ -206,7 +190,37 @@
       "origin": "China",
       "licence": "Open weights",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "57% ±3",
+      "effort": "xhigh",
+      "notes": "$3.73 per task; Apache 2.0; 2.4T total / 95B active"
+    },
+    {
+      "id": "muse-spark-1.2",
+      "name": "muse-spark-1.2",
+      "vendor": "Meta",
+      "origin": "US",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "55% ±2",
+      "effort": "xhigh",
+      "notes": "$3.70 per task"
+    },
+    {
+      "id": "claude-sonnet-5",
+      "name": "claude-sonnet-5",
+      "vendor": "Anthropic",
+      "origin": "US",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "54% ±4",
+      "effort": "max",
+      "notes": "$26.40 per task; most expensive on the list"
     },
     {
       "id": "deepseek-v4-flash",
@@ -215,70 +229,193 @@
       "origin": "China",
       "licence": "Open weights",
       "tier": "AI Native",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "53% ±4",
+      "effort": "max",
+      "notes": "$0.46 per task; MIT; 284B total / 13B active"
+    },
+    {
+      "id": "gemini-3.6-flash",
+      "name": "gemini-3.6-flash",
+      "vendor": "Google",
+      "origin": "US",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "47% ±4",
+      "effort": "high",
+      "notes": "$2.21 per task"
     },
     {
       "id": "glm-5.2",
       "name": "glm-5.2",
-      "vendor": "Zhipu AI",
+      "vendor": "Z.ai / Zhipu",
       "origin": "China",
       "licence": "Open weights",
       "tier": "AI Native",
-      "borderline": true
+      "borderline": true,
+      "benchmark": "DeepSWE v1.1",
+      "score": "44% ±2",
+      "effort": "max",
+      "notes": "$3.92 per task; MIT; borderline"
+    },
+    {
+      "id": "muse-spark-1.1",
+      "name": "Muse Spark 1.1",
+      "vendor": "Meta",
+      "origin": "US",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "61.5% ±3.1",
+      "effort": null,
+      "notes": "DeepSWE 53%"
+    },
+    {
+      "id": "gpt-5.4",
+      "name": "gpt-5.4",
+      "vendor": "OpenAI",
+      "origin": "US",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "59.1% ±3.6",
+      "effort": "xhigh",
+      "notes": "DeepSWE 52%"
+    },
+    {
+      "id": "muse-spark",
+      "name": "Muse Spark",
+      "vendor": "Meta",
+      "origin": "US",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "55.0% ±3.6",
+      "effort": null,
+      "notes": ""
+    },
+    {
+      "id": "claude-opus-4.6",
+      "name": "claude-opus-4.6",
+      "vendor": "Anthropic",
+      "origin": "US",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "51.9% ±3.6",
+      "effort": "thinking",
+      "notes": ""
+    },
+    {
+      "id": "claude-opus-4.5",
+      "name": "claude-opus-4.5",
+      "vendor": "Anthropic",
+      "origin": "US",
+      "licence": "Closed",
+      "tier": "AI Native",
+      "borderline": true,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "45.9% ±3.6",
+      "effort": null,
+      "notes": "Borderline"
+    },
+    {
+      "id": "gemini-3.1-pro",
+      "name": "gemini-3.1-pro",
+      "vendor": "Google",
+      "origin": "US",
+      "licence": "Closed",
+      "tier": "AI Assisted",
+      "borderline": true,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "46.1% ±3.6",
+      "effort": "thinking",
+      "notes": "At the AI Native bar on SWE-Bench Pro but DeepSWE only 12%; the study says to treat it as AI Assisted in practice"
     },
     {
       "id": "claude-sonnet-4.5",
       "name": "claude-sonnet-4.5",
       "vendor": "Anthropic",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Assisted",
-      "borderline": false
+      "borderline": true,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "43.6% ±3.6",
+      "effort": null,
+      "notes": "Borderline AI Native"
     },
     {
       "id": "gemini-3-pro-preview",
       "name": "gemini-3-pro-preview",
       "vendor": "Google",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Assisted",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "43.3% ±3.6",
+      "effort": null,
+      "notes": ""
     },
     {
       "id": "claude-sonnet-4",
       "name": "claude-sonnet-4",
       "vendor": "Anthropic",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Assisted",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "42.7% ±3.6",
+      "effort": null,
+      "notes": ""
     },
     {
       "id": "gpt-5",
       "name": "gpt-5",
       "vendor": "OpenAI",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Assisted",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "41.8% ±3.5",
+      "effort": "high",
+      "notes": ""
     },
     {
       "id": "gpt-5.2-codex",
       "name": "gpt-5.2-codex",
       "vendor": "OpenAI",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Assisted",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "41.0% ±3.6",
+      "effort": null,
+      "notes": ""
     },
     {
       "id": "claude-haiku-4.5",
       "name": "claude-haiku-4.5",
       "vendor": "Anthropic",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Assisted",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "39.5% ±3.6",
+      "effort": null,
+      "notes": ""
     },
     {
       "id": "qwen3-coder-480b-a35b",
@@ -287,7 +424,11 @@
       "origin": "China",
       "licence": "Open weights",
       "tier": "AI Assisted",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "38.7% ±3.6",
+      "effort": null,
+      "notes": "Apache 2.0"
     },
     {
       "id": "minimax-2.1",
@@ -296,61 +437,76 @@
       "origin": "China",
       "licence": "Open weights",
       "tier": "AI Assisted",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "36.8% ±3.6",
+      "effort": null,
+      "notes": ""
     },
     {
       "id": "gemini-3.5-flash",
       "name": "gemini-3.5-flash",
       "vendor": "Google",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Assisted",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "36% ±4",
+      "effort": "high",
+      "notes": "$3.45 per task"
     },
     {
       "id": "gemini-3-flash",
       "name": "gemini-3-flash",
       "vendor": "Google",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Assisted",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "34.6% ±3.6",
+      "effort": null,
+      "notes": ""
     },
     {
       "id": "claude-sonnet-4.6",
       "name": "claude-sonnet-4.6",
       "vendor": "Anthropic",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "AI Assisted",
-      "borderline": false
-    },
-    {
-      "id": "gemini-3.1-pro",
-      "name": "gemini-3.1-pro",
-      "vendor": "Google",
-      "origin": "USA",
-      "licence": "Closed",
-      "tier": "AI Assisted",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "DeepSWE v1.1",
+      "score": "30%",
+      "effort": "high",
+      "notes": "From Datacurve's v1.1 release notes"
     },
     {
       "id": "gpt-5.2",
       "name": "gpt-5.2",
       "vendor": "OpenAI",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Closed",
       "tier": "Not Recommended",
-      "borderline": false
+      "borderline": true,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "29.9% ±2.2",
+      "effort": null,
+      "notes": "Borderline"
     },
     {
       "id": "kimi-k2-instruct",
       "name": "kimi-k2-instruct",
-      "vendor": "Moonshot AI",
+      "vendor": "Moonshot",
       "origin": "China",
       "licence": "Open weights",
       "tier": "Not Recommended",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "27.7% ±3.3",
+      "effort": null,
+      "notes": ""
     },
     {
       "id": "qwen3-235b-a22b",
@@ -359,16 +515,24 @@
       "origin": "China",
       "licence": "Open weights",
       "tier": "Not Recommended",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "21.4% ±2.3",
+      "effort": null,
+      "notes": "Apache 2.0"
     },
     {
       "id": "gpt-oss-120b",
       "name": "gpt-oss-120b",
       "vendor": "OpenAI",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Open weights",
       "tier": "Not Recommended",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "16.2% ±2.7",
+      "effort": null,
+      "notes": "Apache 2.0"
     },
     {
       "id": "deepseek-v3.2",
@@ -377,88 +541,128 @@
       "origin": "China",
       "licence": "Open weights",
       "tier": "Not Recommended",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "15.6% ±2.6",
+      "effort": null,
+      "notes": "MIT"
     },
     {
       "id": "gemma-3-27b-it",
       "name": "gemma-3-27b-it",
       "vendor": "Google",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Open weights",
       "tier": "Not Recommended",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "11.4% ±2.2",
+      "effort": null,
+      "notes": "Gemma licence"
     },
     {
       "id": "llama-3.1-405b-instruct",
       "name": "llama-3.1-405b-instruct",
       "vendor": "Meta",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Open weights",
       "tier": "Not Recommended",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "11.2% ±2.2",
+      "effort": null,
+      "notes": "Llama licence"
     },
     {
       "id": "glm-4.6",
       "name": "glm-4.6",
-      "vendor": "Zhipu AI",
+      "vendor": "Z.ai / Zhipu",
       "origin": "China",
       "licence": "Open weights",
       "tier": "Not Recommended",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "9.7% ±2.2",
+      "effort": null,
+      "notes": "MIT"
     },
     {
       "id": "llama-4-maverick",
       "name": "llama-4-maverick",
       "vendor": "Meta",
-      "origin": "USA",
+      "origin": "US",
       "licence": "Open weights",
       "tier": "Not Recommended",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "5.2% ±1.2",
+      "effort": null,
+      "notes": "Llama licence"
     },
     {
       "id": "codestral-2405",
       "name": "codestral-2405",
-      "vendor": "Mistral AI",
+      "vendor": "Mistral",
       "origin": "France",
       "licence": "Open weights",
       "tier": "Not Recommended",
-      "borderline": false
+      "borderline": false,
+      "benchmark": "SWE-Bench Pro (Scale)",
+      "score": "1.5% ±1.5",
+      "effort": null,
+      "notes": ""
     },
     {
       "id": "k2-horizon-375b-a23b",
       "name": "K2 Horizon 375B-A23B",
-      "vendor": "MBZUAI",
+      "vendor": "MBZUAI IFM",
       "origin": "UAE",
       "licence": "UAE sovereign",
       "tier": "Unproven",
-      "borderline": false
+      "borderline": false,
+      "benchmark": null,
+      "score": null,
+      "effort": null,
+      "notes": "Apache 2.0; 375B total / 23B active, 512K context; vendor-reported SWE-Bench Pro 42.6% (not used for tiering); self-hosting needs 8×H200-class GPUs; test priority 1"
     },
     {
       "id": "k2-think-v2",
       "name": "K2 Think V2",
-      "vendor": "MBZUAI",
+      "vendor": "MBZUAI IFM",
       "origin": "UAE",
       "licence": "UAE sovereign",
       "tier": "Unproven",
-      "borderline": false
+      "borderline": false,
+      "benchmark": null,
+      "score": null,
+      "effort": null,
+      "notes": "Apache 2.0; 70B, ~262K context; no coding-agent score published; test priority 2"
     },
     {
       "id": "k2-horizon-36b-a4b",
       "name": "K2 Horizon 36B-A4B",
-      "vendor": "MBZUAI",
+      "vendor": "MBZUAI IFM",
       "origin": "UAE",
       "licence": "UAE sovereign",
       "tier": "Unproven",
-      "borderline": false
+      "borderline": false,
+      "benchmark": null,
+      "score": null,
+      "effort": null,
+      "notes": "Apache 2.0; 36B (4B active), 512K context; for workstations and on-premises use; no coding score published"
     },
     {
       "id": "k2-horizon-32b",
       "name": "K2 Horizon 32B",
-      "vendor": "MBZUAI",
+      "vendor": "MBZUAI IFM",
       "origin": "UAE",
       "licence": "UAE sovereign",
       "tier": "Unproven",
-      "borderline": false
+      "borderline": false,
+      "benchmark": null,
+      "score": null,
+      "effort": null,
+      "notes": "Apache 2.0; 32B, 512K context; interim checkpoint; no coding score published"
     },
     {
       "id": "falcon-h1r-7b",
@@ -467,16 +671,24 @@
       "origin": "UAE",
       "licence": "UAE sovereign",
       "tier": "Unproven",
-      "borderline": false
+      "borderline": false,
+      "benchmark": null,
+      "score": null,
+      "effort": null,
+      "notes": "Falcon licence; 7B, 256K context; expected to struggle in long agent sessions"
     },
     {
       "id": "jais-2",
       "name": "Jais 2",
-      "vendor": "Inception (G42)",
+      "vendor": "Inception (G42) and MBZUAI",
       "origin": "UAE",
       "licence": "UAE sovereign",
       "tier": "Unproven",
-      "borderline": false
+      "borderline": false,
+      "benchmark": null,
+      "score": null,
+      "effort": null,
+      "notes": "Arabic-first; not for code generation"
     },
     {
       "id": "falcon-3-3b",
@@ -485,7 +697,11 @@
       "origin": "UAE",
       "licence": "UAE sovereign",
       "tier": "Unproven",
-      "borderline": false
+      "borderline": false,
+      "benchmark": null,
+      "score": null,
+      "effort": null,
+      "notes": "TII Falcon License 2.0; 3B, 32K context; too small for adFactory"
     }
   ]
 }

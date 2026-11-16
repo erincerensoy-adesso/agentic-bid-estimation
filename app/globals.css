@@ -145,3 +145,4 @@ table.grid th, table.grid td { padding: 0.3rem 0.45rem; }
 .axis-sub { font-size: 10px; fill: var(--muted); }
 .tooltip { position: absolute; transform: translate(-50%, calc(-100% - 10px)); background: var(--ink); color: #fff; padding: 0.45rem 0.65rem; border-radius: 6px; font-size: 0.8rem; pointer-events: none; white-space: nowrap; }
 .tooltip .muted { color: #c3c2b7; }
+td.notes { white-space: normal; min-width: 260px; max-width: 420px; color: var(--ink-2); font-size: 0.84rem; }
