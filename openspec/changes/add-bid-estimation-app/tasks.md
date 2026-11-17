@@ -4,7 +4,7 @@
 - [x] 1.3 Timeline Template parser with validation and role mapping
 - [x] 1.4 RFP text extraction and LLM survey pre-fill
 - [x] 1.5 Excel report with the seven sheets
-- [x] 1.6 Six-step wizard UI with browser persistence
+- [x] 1.6 Five-step wizard UI with browser persistence
 - [x] 1.7 Unit tests: worked example, boundary checks, overrides, parser, report
 - [x] 1.8 README with stack and reason
 - [x] 1.11 Survey: plain-language answer scale, question explanations, Q1/Q2 consistency rule
