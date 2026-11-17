@@ -57,6 +57,21 @@ function linkRules(cfg: EstimationConfig): string {
 
 export class PrefillError extends Error {}
 
+/** True when a credential for the LLM is configured (direct API key, or a Bearer token for a proxy). */
+export function llmConfigured(): boolean {
+  return Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN);
+}
+
+/**
+ * Server-side refusal fallbacks are an Anthropic API feature that proxies (e.g. an internal AI hub) usually do not
+ * pass through, so they default to off when ANTHROPIC_BASE_URL points elsewhere.
+ */
+function fallbacksEnabled(): boolean {
+  const setting = process.env.BID_PREFILL_FALLBACKS;
+  if (setting) return setting !== "off";
+  return !process.env.ANTHROPIC_BASE_URL;
+}
+
 export async function prefillSurvey(docs: RfpDocument[], cfg: EstimationConfig): Promise<PrefillResult> {
   const rfp = docs
     .map((d) => `<document name="${d.fileName.replace(/"/g, "'")}">\n${d.text}\n</document>`)
@@ -68,7 +83,7 @@ export async function prefillSurvey(docs: RfpDocument[], cfg: EstimationConfig):
 
   const client = new Anthropic({ timeout: 180_000, maxRetries: 1 });
   const model = process.env.BID_PREFILL_MODEL || "claude-opus-5-5";
-  const useFallbacks = (process.env.BID_PREFILL_FALLBACKS ?? "default") !== "off";
+  const useFallbacks = fallbacksEnabled();
 
   const response = await client.beta.messages.parse({
     model,

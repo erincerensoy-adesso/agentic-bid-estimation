@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { config } from "@/lib/config";
-import { PrefillError, prefillSurvey } from "@/lib/prefill";
+import { llmConfigured, PrefillError, prefillSurvey } from "@/lib/prefill";
 import { extractRfpText, RFP_MAX_TOTAL_BYTES, RfpError, type RfpDocument } from "@/lib/rfp";
 
 export const runtime = "nodejs";
@@ -25,8 +25,8 @@ export async function POST(req: Request) {
     return Response.json({ error: msg }, { status: 422 });
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return Response.json({ error: "Pre-fill is not configured (ANTHROPIC_API_KEY is not set). Answer the survey manually." }, { status: 503 });
+  if (!llmConfigured()) {
+    return Response.json({ error: "Pre-fill is not configured (no LLM key is set). Answer the survey manually." }, { status: 503 });
   }
 
   try {

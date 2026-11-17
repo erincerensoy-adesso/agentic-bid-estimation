@@ -21,6 +21,7 @@ Without an API key everything works except the RFP pre-fill; the survey is then 
 | `npm run typecheck` | TypeScript check |
 | `npm run build && npm start` | Production build |
 | `npm run fixture` | Regenerate `tests/fixtures/timeline-template.xlsx` |
+| `npm run check-llm` | Test the RFP pre-fill connection with the settings in `.env.local` |
 
 ## Technology stack and why
 
@@ -54,9 +55,13 @@ with `zod` (structured survey pre-fill), `vitest` (tests). The chart is plain SV
   memory only so the pre-fill can be re-run; after a page reload, upload the RFP again to re-run it.
 - **RFP handling:** text is extracted in memory on the server and sent to the LLM; nothing is written to disk.
   The prompt treats the RFP as untrusted data and instructs the model to ignore instructions inside it.
-- **LLM settings** (`.env.local`): `ANTHROPIC_API_KEY` (server only, never sent to the browser), `BID_PREFILL_MODEL`
-  (default `claude-opus-5-5`), `BID_PREFILL_FALLBACKS` (`default` enables the API's server-side refusal fallback;
-  `off` disables it — set `off` if you switch to a model that does not support it).
+- **LLM settings** (`.env.local`, see `.env.example`): `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` (server only,
+  never sent to the browser), `ANTHROPIC_BASE_URL` to go through an internal LLM proxy such as the adesso AI hub
+  (base address without `/v1`; the proxy must offer Anthropic's `/v1/messages`), `BID_PREFILL_MODEL` (default
+  `claude-opus-5-5`; use the name your provider gives the model), and `BID_PREFILL_FALLBACKS` (Anthropic's server-side
+  refusal fallback; on by default for the Anthropic API, off by default behind a proxy).
+- **Checking the LLM connection:** `npm run check-llm` sends a two-sentence sample RFP through the pre-fill using the
+  settings in `.env.local`, and explains the most common failures.
 - **Week columns** are identified by position between `Role` and `Total`; `#`, `Domain` and `Total per Tech Domain`
   are ignored wherever they appear. All totals are recomputed (this corrects the template's `SUM(I:AF)` bug).
 

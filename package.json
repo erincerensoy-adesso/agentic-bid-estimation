@@ -9,7 +9,8 @@
     "start": "next start",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "fixture": "tsx scripts/make-template-fixture.ts"
+    "fixture": "tsx scripts/make-template-fixture.ts",
+    "check-llm": "node --env-file-if-exists=.env.local --import tsx scripts/check-llm.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.8.0",
