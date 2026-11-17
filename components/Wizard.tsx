@@ -73,28 +73,33 @@ export function Wizard() {
   return (
     <div className="app">
       <header className="topbar">
-        <div className="brand">
-          <span className="product">Agentic Estimation Platform</span>
+        <div className="topbar-inner">
+          <div className="product">Agentic Estimation Platform</div>
+          <div className="topbar-meta">
+            {state.bidName && (
+              <span className="bid-label">
+                {state.bidName}
+                {state.clientName && <span className="bid-client"> · {state.clientName}</span>}
+              </span>
+            )}
+            <button className="btn" onClick={newBid}>New bid</button>
+          </div>
         </div>
-        <div className="topbar-meta">
-          {state.bidName && <span className="bid-label">{state.bidName}{state.clientName && ` · ${state.clientName}`}</span>}
-          <button className="btn ghost" onClick={newBid}>New bid</button>
-        </div>
+        <nav className="stepper" aria-label="Steps">
+          {STEPS.map((label, i) => (
+            <button
+              key={label}
+              className={`step ${i === step ? "active" : ""} ${stepDone[i] ? "done" : ""}`}
+              onClick={() => setStep(i)}
+              aria-current={i === step ? "step" : undefined}
+            >
+              <span className="step-num" aria-hidden="true">{stepDone[i] ? "✓" : i + 1}</span>
+              <span>{label}</span>
+              {stepDone[i] && <span className="sr-only"> (done)</span>}
+            </button>
+          ))}
+        </nav>
       </header>
-
-      <nav className="stepper" aria-label="Steps">
-        {STEPS.map((label, i) => (
-          <button
-            key={label}
-            className={`step ${i === step ? "active" : ""} ${stepDone[i] ? "done" : ""}`}
-            onClick={() => setStep(i)}
-            aria-current={i === step ? "step" : undefined}
-          >
-            <span className="step-num">{stepDone[i] ? "✓" : i + 1}</span>
-            <span>{label}</span>
-          </button>
-        ))}
-      </nav>
 
       <main className="content">
         {!loaded ? null : (
