@@ -1,4 +1,4 @@
-# Bid Estimation App (MVP)
+# Agentic Estimation Platform (MVP)
 
 Takes a manual baseline staffing timeline plus information about a bid and returns the AI productivity gain per role,
 the AI-adjusted effort, the token cost range, a calculated AI timeline and an Excel comparison report.

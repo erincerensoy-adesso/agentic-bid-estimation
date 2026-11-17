@@ -1,5 +1,7 @@
 :root {
-  --red: #e30613;
+  --brand: #006ec7;        /* adesso blue */
+  --brand-dark: #00579e;
+  --brand-tint: #eef5fc;
   --ink: #1b1b1b;
   --ink-2: #52514e;
   --muted: #7a7974;
@@ -27,12 +29,11 @@ h2 { font-size: 1.05rem; margin: 0 0 0.75rem; }
 .muted { color: var(--muted); }
 .small { font-size: 0.85rem; }
 
-.topbar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: var(--surface); border-bottom: 3px solid var(--red); }
-.brand { display: flex; align-items: baseline; gap: 0.75rem; }
-.logo { color: var(--red); font-weight: 800; font-size: 1.35rem; letter-spacing: -0.02em; }
-.product { font-weight: 600; color: var(--ink-2); }
+.topbar { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1.5rem; background: var(--surface); border-bottom: 3px solid var(--brand); }
+.brand { display: flex; align-items: baseline; }
+.product { color: var(--brand); font-weight: 700; font-size: 1.2rem; letter-spacing: -0.01em; }
 .topbar-meta { display: flex; gap: 1rem; align-items: center; }
-.bid-label { color: var(--ink-2); font-size: 0.9rem; }
+.bid-label { color: var(--ink); font-size: 0.95rem; font-weight: 700; }
 
 .stepper { display: flex; gap: 0.25rem; padding: 0.75rem 1.5rem; background: var(--surface); border-bottom: 1px solid var(--line); overflow-x: auto; }
 .step { display: flex; align-items: center; gap: 0.5rem; border: 0; background: none; padding: 0.4rem 0.75rem; border-radius: 999px; cursor: pointer; color: var(--ink-2); font: inherit; white-space: nowrap; }
@@ -41,7 +42,7 @@ h2 { font-size: 1.05rem; margin: 0 0 0.75rem; }
 .step-num { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; border: 1px solid currentColor; font-size: 0.8rem; }
 .step.done .step-num { background: var(--ok); border-color: var(--ok); color: #fff; }
 
-.content { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
+.content { max-width: 1440px; margin: 0 auto; padding: 1.5rem; }
 .step-nav { display: flex; justify-content: space-between; margin-top: 2rem; }
 
 .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem; }
@@ -51,14 +52,14 @@ details.card[open] > summary { margin-bottom: 0.75rem; }
 .btn { font: inherit; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; }
 .btn:hover:not(:disabled) { border-color: var(--ink-2); }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
-.btn.primary:hover:not(:disabled) { background: #c00510; }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn.primary:hover:not(:disabled) { background: var(--brand-dark); border-color: var(--brand-dark); }
 .btn.ghost { background: none; }
 .btn.small { padding: 0.3rem 0.7rem; font-size: 0.85rem; }
 .btn.tiny { padding: 0.1rem 0.45rem; font-size: 0.75rem; }
 
 input, select { font: inherit; padding: 0.45rem 0.6rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); }
-select.missing { border-color: var(--red); background: #fff5f5; }
+select.missing { border-color: var(--brand); background: var(--brand-tint); }
 .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
 .form-grid label { display: flex; flex-direction: column; gap: 0.35rem; font-weight: 600; font-size: 0.9rem; }
 
@@ -73,7 +74,7 @@ select.missing { border-color: var(--red); background: #fff5f5; }
 
 .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
 .stat { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.2rem; }
-.stat.accent { border-top: 3px solid var(--red); }
+.stat.accent { border-top: 3px solid var(--brand); }
 .stat-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
 .stat-value { font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 .stat-value.small { font-size: 0.95rem; word-break: break-all; }
@@ -93,7 +94,7 @@ th { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 tfoot td { font-weight: 700; border-top: 2px solid var(--ink); border-bottom: 0; }
 tr.selected td { background: #f3f8fe; }
-tr.overridden td:first-child { box-shadow: inset 3px 0 0 var(--red); }
+tr.overridden td:first-child { box-shadow: inset 3px 0 0 var(--brand); }
 table.grid td.filled { background: #eef4fc; }
 table.grid th, table.grid td { padding: 0.3rem 0.45rem; }
 
@@ -109,9 +110,9 @@ table.grid th, table.grid td { padding: 0.3rem 0.45rem; }
 
 .survey { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
 .question { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.9rem 1.1rem; }
-.question.unanswered { border-left: 4px solid var(--red); }
+.question.unanswered { border-left: 4px solid var(--brand); }
 .question-head { display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.6rem; flex-wrap: wrap; }
-.qid { font-weight: 700; color: var(--red); }
+.qid { font-weight: 700; color: var(--brand); }
 .qtext { font-weight: 600; flex: 1; }
 .badge { font-size: 0.75rem; padding: 0.15rem 0.55rem; border-radius: 999px; }
 .badge.llm { background: var(--info-bg); color: #1d4d86; }
@@ -125,10 +126,10 @@ table.grid th, table.grid td { padding: 0.3rem 0.45rem; }
 .excerpt { margin: 0.6rem 0 0; padding: 0.4rem 0.8rem; border-left: 3px solid #8fb6e8; color: var(--ink-2); font-size: 0.86rem; }
 .excerpt cite { color: var(--muted); font-style: normal; }
 
-.slider-col { min-width: 210px; }
+.slider-col { min-width: 0; }
 .roles th, .roles td { padding: 0.45rem 0.45rem; }
 .slider { display: flex; align-items: center; gap: 0.5rem; }
-.slider input[type="range"] { flex: 1; padding: 0; accent-color: var(--red); }
+.slider input[type="range"] { width: 110px; flex: none; padding: 0; accent-color: var(--brand); }
 .slider output { min-width: 3.6rem; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
 .reset-placeholder { width: 3.1rem; flex: none; }
 

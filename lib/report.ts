@@ -12,7 +12,7 @@ const PD = "#,##0.0";
 const GAIN = '0.00"x"';
 const USD = '"$"#,##0';
 const FTE = "0.00";
-const RED = "FFE30613";
+const BRAND = "FF006EC7"; // adesso blue
 
 function headerRow(ws: ExcelJS.Worksheet, values: (string | number)[]) {
   const row = ws.addRow(values);
@@ -50,7 +50,7 @@ export async function buildReport(
   // Summary
   const sum = wb.addWorksheet("Summary");
   widths(sum, [34, 40]);
-  sum.addRow(["Bid estimation report"]).font = { bold: true, size: 14 };
+  sum.addRow(["Agentic Estimation Platform — bid estimation report"]).font = { bold: true, size: 14 };
   const kv: [string, string | number | Date, string?][] = [
     ["Bid name", input.bidName],
     ["Client", input.clientName],
@@ -96,8 +96,8 @@ export async function buildReport(
       r.adjustedPD, r.pdSaved, r.fteMonths, r.tokenCostMin, r.tokenCostMax,
     ]);
     if (r.overridden) {
-      row.getCell(6).font = { bold: true, color: { argb: RED } };
-      row.getCell(7).font = { bold: true, color: { argb: RED } };
+      row.getCell(6).font = { bold: true, color: { argb: BRAND } };
+      row.getCell(7).font = { bold: true, color: { argb: BRAND } };
     }
   }
   boldRow(

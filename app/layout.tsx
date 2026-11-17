@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Bid Estimation",
+  title: "Agentic Estimation Platform",
   description: "AI-adjusted bid effort, token cost and timeline",
 };
 

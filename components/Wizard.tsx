@@ -70,8 +70,7 @@ export function Wizard() {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <span className="logo">adesso</span>
-          <span className="product">Bid Estimation</span>
+          <span className="product">Agentic Estimation Platform</span>
         </div>
         <div className="topbar-meta">
           {state.bidName && <span className="bid-label">{state.bidName}{state.clientName && ` · ${state.clientName}`}</span>}

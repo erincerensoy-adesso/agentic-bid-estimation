@@ -1,7 +1,7 @@
 # Project Context
 
 ## Purpose
-Bid Estimation App: turns a manual (no-AI) baseline staffing timeline plus information about a bid into an AI
+Agentic Estimation Platform (bid estimation app): turns a manual (no-AI) baseline staffing timeline plus information about a bid into an AI
 productivity gain per role, AI-adjusted effort, token cost, a calculated AI timeline and an Excel comparison report.
 Source specification: "Bid Estimation App — MVP Specification", v0.2, 15 November 2026.
 
