@@ -104,7 +104,7 @@ export function Wizard() {
       <main className="content">
         {!loaded ? null : (
           <>
-            {step === 0 && <BidStep state={state} dispatch={dispatch} rfpFiles={rfpFiles} />}
+            {step === 0 && <BidStep state={state} dispatch={dispatch} rfpFiles={rfpFiles} onGoTo={setStep} />}
             {step === 1 && <TimelineStep state={state} dispatch={dispatch} />}
             {step === 2 && <ModelsStep state={state} dispatch={dispatch} result={result} />}
             {step === 3 && <SurveyStep state={state} dispatch={dispatch} rfpFiles={rfpFiles} />}

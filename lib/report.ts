@@ -33,10 +33,7 @@ function widths(ws: ExcelJS.Worksheet, w: number[]) {
   w.forEach((width, i) => (ws.getColumn(i + 1).width = width));
 }
 
-export function reportFileName(bidName: string, date = new Date()): string {
-  const safe = (bidName.trim() || "bid").replace(/[^\w\- ]+/g, "").replace(/\s+/g, "-");
-  return `${safe}_estimation_${date.toISOString().slice(0, 10)}.xlsx`;
-}
+export { reportFileName } from "./fileName";
 
 export async function buildReport(
   input: ReportInput,
