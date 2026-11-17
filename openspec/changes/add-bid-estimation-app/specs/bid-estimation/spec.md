@@ -45,6 +45,11 @@ people have narrow, low ranges (Delivery Manager 1.2x–1.6x) and Dev the widest
 The system SHALL offer one slider per role from 1.0x to 10x in 0.1 steps, set to the computed gain, whose value replaces
 the gain of every line of that role, with a Reset control.
 
+#### Scenario: Lowering a gain lowers AI token usage
+- **WHEN** a role's gain is overridden below its computed gain
+- **THEN** that role's token usage scales linearly from 100% at the computed gain to 0% at 1.0x, so lowering a gain
+  never raises its token cost; seats and subscriptions are still charged
+
 #### Scenario: Override drives the AI timeline
 - **WHEN** the Dev slider is set below the lowest computed line gain
 - **THEN** the AI timeline duration is recomputed from that override

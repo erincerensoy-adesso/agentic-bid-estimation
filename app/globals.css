@@ -168,3 +168,4 @@ h3 { font-size: 0.95rem; margin: 1.25rem 0 0.5rem; }
 tr.clickable { cursor: pointer; }
 tr.clickable:hover td { background: var(--brand-tint); }
 .notes-list { margin: 0.75rem 0 0; padding-left: 1.2rem; color: var(--ink-2); font-size: 0.85rem; }
+.usage { font-size: 0.75rem; color: var(--ink-2); background: var(--brand-tint); border-radius: 999px; padding: 0.1rem 0.5rem; white-space: nowrap; }

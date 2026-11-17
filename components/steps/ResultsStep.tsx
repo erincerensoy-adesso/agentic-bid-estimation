@@ -62,7 +62,7 @@ export function ResultsStep({ state, dispatch, result }: { state: BidState; disp
 
       <div className="card">
         <h2>Gain per role</h2>
-        <p className="muted small">Drag a slider to override a role&apos;s gain ({s.min}x–{s.max}x). The override applies to every line of that role.</p>
+        <p className="muted small">Drag a slider to override a role&apos;s gain ({s.min}x–{s.max}x). The override applies to every line of that role. Lowering a gain below the computed value also lowers that role&apos;s AI token usage, down to none at 1.0x; seats are still charged.</p>
         <div className="table-wrap">
           <table className="roles">
             <thead>
@@ -94,6 +94,11 @@ export function ResultsStep({ state, dispatch, result }: { state: BidState; disp
                       {r.overridden ? (
                         <button className="btn tiny" onClick={() => dispatch({ type: "setOverride", role: r.role, gain: null })}>Reset</button>
                       ) : <span className="reset-placeholder" />}
+                      {r.aiUsage < 1 && (
+                        <span className="usage" title="Lowering the gain below the computed value scales AI token usage down, to 0% at 1.0x. Seats are still charged.">
+                          AI use {Math.round(r.aiUsage * 100)}%
+                        </span>
+                      )}
                     </div>
                   </td>
                   <td className="num">{fmtPD(r.adjustedPD)}</td>

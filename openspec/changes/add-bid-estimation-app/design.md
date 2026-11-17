@@ -17,6 +17,11 @@ implementer and requires a pure, unit-tested calculation module, sub-200 ms reca
   (operator decision: even weak models save some time); Delivery Manager 1.6 / 1.2, RE and UX-UI 4 / 1.4,
   Architect 5 / 1.6, QA 6 / 1.8, DevOps 7 / 1.8, Dev 10 / 2.0. To be calibrated against reference bids.
 
+- **Token usage follows the override.** The spec charges token rates on the remaining (AI-adjusted) effort, so lowering
+  a gain raised token cost (more person-months at full AI spend). Operator decision: a gain lowered by the override means
+  AI does less of the work, so token usage scales from 100% at the computed gain to 0% at 1.0x; at or above the computed
+  gain usage stays full. Seats and subscriptions are unchanged.
+
 ## Risks / Trade-offs
 - The parser was built against a reconstructed fixture; the real template may contain layout variations
   → header lookup is by name, week columns by position between `Role` and `Total`.

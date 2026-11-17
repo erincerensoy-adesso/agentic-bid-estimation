@@ -309,3 +309,46 @@ describe("AI cost by Claude plan (worked example: 8 AI weeks)", () => {
     expect(calculate({ ...workedExample(), allowedHarnessIds: [] }, specCfg, modelCatalog).costs).toBeNull();
   });
 });
+
+describe("token usage follows the override (option B)", () => {
+  const dev = (o: Partial<Record<Role, number>>) =>
+    calculate({ ...workedExample(), overrides: o }, specCfg, modelCatalog).roles.find((r) => r.role === "Dev")!;
+
+  it("is unchanged at the computed gain", () => {
+    const r = dev({});
+    expect(r.aiUsage).toBe(1);
+    expect(Math.round(r.tokenCostMin)).toBe(4649);
+  });
+
+  it("drops to zero at 1.0x, while seats are still charged", () => {
+    const res = calculate({ ...workedExample(), overrides: { Dev: 1 } }, specCfg, modelCatalog);
+    const r = res.roles.find((x) => x.role === "Dev")!;
+    expect(r.aiUsage).toBe(0);
+    expect(r.tokenCostMin).toBe(0);
+    const ent = res.costs!.enterprise.roles.find((x) => x.role === "Dev")!;
+    expect(ent.usageMin).toBe(0);
+    expect(ent.seatMin).toBeGreaterThan(0);
+  });
+
+  it("scales linearly between 1.0x and the computed gain", () => {
+    const computed = dev({}).computedGain;
+    const r = dev({ Dev: 2.5 });
+    expect(r.aiUsage).toBeCloseTo((2.5 - 1) / (computed - 1), 12);
+    expect(r.tokenCostMin).toBeCloseTo(1000 * (420 / 2.5 / 20) * r.aiUsage, 9);
+  });
+
+  it("never raises token cost when a gain is lowered", () => {
+    let prev = Infinity;
+    for (let g = 4.5; g >= 1; g -= 0.1) {
+      const cost = dev({ Dev: Math.round(g * 10) / 10 }).tokenCostMin;
+      expect(cost).toBeLessThanOrEqual(prev + 1e-9);
+      prev = cost;
+    }
+  });
+
+  it("keeps full usage when a gain is raised above the computed value", () => {
+    const r = dev({ Dev: 6 });
+    expect(r.aiUsage).toBe(1);
+    expect(r.tokenCostMin).toBeCloseTo(1000 * (420 / 6 / 20), 9);
+  });
+});

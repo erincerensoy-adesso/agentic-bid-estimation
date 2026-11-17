@@ -54,6 +54,11 @@ export interface RoleResult {
   tokenCostMax: number;
   rateMin: number;
   rateMax: number;
+  /**
+   * Share of full AI token usage (0..1). 1 at or above the computed gain; lowering the gain with the
+   * override scales usage down linearly to 0 at 1.0x (AI doing none of the work). Seats are unaffected.
+   */
+  aiUsage: number;
 }
 
 export interface AiTimelineLine {
@@ -169,6 +174,16 @@ export function harnessInEffect(allowedIds: string[], cfg: EstimationConfig): Ha
   return best;
 }
 
+/**
+ * How much of full AI token usage a role still has (0..1). A gain lowered below the computed gain by an
+ * override means AI does less of the work: usage falls linearly from 1 at the computed gain to 0 at 1.0x.
+ * At or above the computed gain, usage is full.
+ */
+export function aiUsage(appliedGain: number, computedGain: number): number {
+  if (appliedGain >= computedGain || computedGain <= 1) return 1;
+  return Math.min(1, Math.max(0, (appliedGain - 1) / (computedGain - 1)));
+}
+
 export function lineGain(potential: number, E: number, role: Role, cfg: EstimationConfig): number {
   const floor = cfg.gainRanges[role].floor;
   return floor + (potential - floor) * E;
@@ -268,6 +283,7 @@ export function calculate(input: CalcInput, cfg: EstimationConfig, catalog: Mode
     const appliedGain = override ?? computedGain;
     const fteMonths = adj / cfg.pdPerMonth;
     const rate = cfg.tokenRates[role];
+    const usage = aiUsage(appliedGain, computedGain);
     roles.push({
       role,
       baselinePD: bpd,
@@ -279,10 +295,11 @@ export function calculate(input: CalcInput, cfg: EstimationConfig, catalog: Mode
       adjustedPD: adj,
       pdSaved: bpd - adj,
       fteMonths,
-      tokenCostMin: rate.min * fteMonths,
-      tokenCostMax: rate.max * fteMonths,
+      tokenCostMin: rate.min * fteMonths * usage,
+      tokenCostMax: rate.max * fteMonths * usage,
       rateMin: rate.min,
       rateMax: rate.max,
+      aiUsage: usage,
     });
   }
 

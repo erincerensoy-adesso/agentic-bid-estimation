@@ -94,15 +94,15 @@ export async function buildReport(
 
   // Role Comparison
   const rc = wb.addWorksheet("Role Comparison");
-  widths(rc, [18, 12, 12, 12, 14, 14, 12, 12, 12, 12, 16, 16]);
+  widths(rc, [18, 12, 12, 12, 14, 14, 12, 12, 12, 12, 14, 16, 16]);
   headerRow(rc, [
     "Role", "Baseline PD", "Complexity", "Potential", "Computed gain", "Applied gain", "Overridden",
-    "Adjusted PD", "PD saved", "FTE-months", "Token cost min", "Token cost max",
+    "Adjusted PD", "PD saved", "FTE-months", "AI token usage", "Token cost min", "Token cost max",
   ]);
   for (const r of res.roles) {
     const row = rc.addRow([
       r.role, r.baselinePD, r.complexity, r.potential, r.computedGain, r.appliedGain, r.overridden ? "Yes" : "No",
-      r.adjustedPD, r.pdSaved, r.fteMonths, r.tokenCostMin, r.tokenCostMax,
+      r.adjustedPD, r.pdSaved, r.fteMonths, r.aiUsage, r.tokenCostMin, r.tokenCostMax,
     ]);
     if (r.overridden) {
       row.getCell(6).font = { bold: true, color: { argb: BRAND } };
@@ -112,10 +112,13 @@ export async function buildReport(
   boldRow(
     rc.addRow([
       "Total", res.totals.baselinePD, null, null, null, res.totals.overallGain, null,
-      res.totals.adjustedPD, res.totals.pdSaved, res.totals.fteMonths, res.totals.tokenCostMin, res.totals.tokenCostMax,
+      res.totals.adjustedPD, res.totals.pdSaved, res.totals.fteMonths, null, res.totals.tokenCostMin, res.totals.tokenCostMax,
     ]),
   );
-  [PD, "0.000", GAIN, GAIN, GAIN, null, PD, PD, FTE, USD, USD].forEach((f, i) => f && (rc.getColumn(i + 2).numFmt = f));
+  rc.addRow([
+    "AI token usage: 100% at or above the computed gain; lowering a gain with the override scales token usage down to 0% at 1.0x. Seats are unaffected.",
+  ]).font = { italic: true };
+  [PD, "0.000", GAIN, GAIN, GAIN, null, PD, PD, FTE, "0%", USD, USD].forEach((f, i) => f && (rc.getColumn(i + 2).numFmt = f));
 
   // Resource Lines
   const rl = wb.addWorksheet("Resource Lines");
@@ -197,11 +200,12 @@ export async function buildReport(
   }
   tc.addRow([]);
   tc.addRow(["Token usage (Enterprise)"]).font = { bold: true };
-  headerRow(tc, ["Role", "Rate min (USD/FTE-month)", "Rate max (USD/FTE-month)", "FTE-months", "Cost min (USD)", "Cost max (USD)"]);
+  headerRow(tc, ["Role", "Rate min (USD/FTE-month)", "Rate max (USD/FTE-month)", "FTE-months", "AI token usage", "Cost min (USD)", "Cost max (USD)"]);
   for (const r of res.roles) {
-    const row = tc.addRow([r.role, r.rateMin, r.rateMax, r.fteMonths, r.tokenCostMin, r.tokenCostMax]);
-    [2, 3, 5, 6].forEach((c) => (row.getCell(c).numFmt = USD));
+    const row = tc.addRow([r.role, r.rateMin, r.rateMax, r.fteMonths, r.aiUsage, r.tokenCostMin, r.tokenCostMax]);
+    [2, 3, 6, 7].forEach((c) => (row.getCell(c).numFmt = USD));
     row.getCell(4).numFmt = FTE;
+    row.getCell(5).numFmt = "0%";
   }
 
   // Inputs
