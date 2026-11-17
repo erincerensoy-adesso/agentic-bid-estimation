@@ -7,8 +7,8 @@ specification ("Bid Estimation App — MVP Specification", v0.2, 15 November 202
 
 ## What Changes
 - New standalone app in `bid-estimation/` (Next.js + TypeScript), independent of the Tech Radar app.
-- Six-step wizard: bid and RFP upload, baseline timeline upload and review, allowed models and harnesses, 12-question
-  complexity survey (LLM pre-fill from the RFP), results with per-role override sliders, Excel export.
+- Five-step wizard: Bid Initials (bid and RFP upload), Timeline and Skills (baseline upload, role and capability review), allowed models and harnesses, 12-question
+  complexity survey (LLM pre-fill from the RFP), Results with per-role override sliders and the Excel download.
 - Formula-based gain per role and per resource line, token cost, and a calculated AI timeline.
 - All parameters in `bid-estimation/config/estimation.config.json`; model catalog in `config/model-catalog.json`.
 

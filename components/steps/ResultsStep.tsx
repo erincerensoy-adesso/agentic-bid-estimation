@@ -6,6 +6,7 @@ import { config } from "@/lib/config";
 import { fmt2, fmt3, fmtGain, fmtPD, fmtUSD } from "@/lib/format";
 import type { Action, BidState } from "@/lib/state";
 import { ComparisonChart } from "../ComparisonChart";
+import { ExportButton } from "../ExportButton";
 
 export function ResultsStep({ state, dispatch, result }: { state: BidState; dispatch: Dispatch<Action>; result: CalcResult }) {
   if (!result.ready) {
@@ -13,7 +14,7 @@ export function ResultsStep({ state, dispatch, result }: { state: BidState; disp
       <section>
         <h1>Results</h1>
         <div className="notice warn">
-          <strong>Results are not available yet.</strong>
+          <strong>Results and the Excel report are not available yet.</strong>
           <ul>{result.missing.map((m) => <li key={m}>{m}</li>)}</ul>
         </div>
       </section>
@@ -27,7 +28,10 @@ export function ResultsStep({ state, dispatch, result }: { state: BidState; disp
 
   return (
     <section>
-      <h1>Results</h1>
+      <div className="page-head">
+        <h1>Results</h1>
+        <ExportButton state={state} result={result} />
+      </div>
       {result.blockingWarning && <div className="notice error">{result.blockingWarning}</div>}
       {result.warnings.map((w, i) => <div key={i} className="notice warn">{w}</div>)}
 

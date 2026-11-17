@@ -27,7 +27,7 @@ export function BidStep({ state, dispatch, rfpFiles }: { state: BidState; dispat
 
   return (
     <section>
-      <h1>Bid</h1>
+      <h1>Bid Initials</h1>
       <p className="lead">Name the bid and upload the RFP. The RFP is read once to suggest answers for the complexity survey; it is not stored.</p>
       <div className="form-grid">
         <label>

@@ -24,7 +24,7 @@ export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dis
 
   return (
     <section>
-      <h1>Complexity survey</h1>
+      <h1>Complexity Survey</h1>
       <p className="lead">
         Twelve questions about the project. For each, pick the answer that fits best. Answers run from{" "}
         <strong>{scale[0].toLowerCase()}</strong> on the left to <strong>{scale[3].toLowerCase()}</strong> on the right; the

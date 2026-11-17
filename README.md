@@ -46,7 +46,7 @@ with `zod` (structured survey pre-fill), `vitest` (tests). The chart is plain SV
 | `lib/prefill.ts`, `lib/rfp.ts` | RFP text extraction and LLM survey pre-fill (spec 7) |
 | `lib/report.ts` | Excel report (spec 8.2) |
 | `app/api/*` | Server routes: `timeline`, `rfp`, `export`, `status` |
-| `components/` | The six-step wizard UI |
+| `components/` | The five-step wizard UI |
 | `tests/` | Unit tests and the template fixture |
 
 ## Behaviour notes

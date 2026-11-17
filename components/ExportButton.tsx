@@ -4,9 +4,11 @@ import { useState } from "react";
 import type { CalcResult } from "@/lib/calc";
 import type { BidState } from "@/lib/state";
 
-export function ExportStep({ state, result }: { state: BidState; result: CalcResult }) {
+/** Downloads the Excel report (Summary, Role Comparison, Resource Lines, AI Timeline, Token Cost, Inputs, Parameters). */
+export function ExportButton({ state, result }: { state: BidState; result: CalcResult }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  if (!result.ready) return null;
 
   async function download() {
     setBusy(true);
@@ -44,25 +46,11 @@ export function ExportStep({ state, result }: { state: BidState; result: CalcRes
   }
 
   return (
-    <section>
-      <h1>Export</h1>
-      <p className="lead">
-        Download the Excel report: Summary, Role Comparison, Resource Lines, AI Timeline, Token Cost, Inputs and Parameters.
-      </p>
-      {!result.ready ? (
-        <div className="notice warn">
-          <strong>The report needs complete inputs.</strong>
-          <ul>{result.missing.map((m) => <li key={m}>{m}</li>)}</ul>
-        </div>
-      ) : (
-        <div className="card">
-          {!state.bidName && <div className="notice warn">The bid has no name; the file will be named “bid_estimation_…”.</div>}
-          <button className="btn primary" onClick={download} disabled={busy}>
-            {busy ? "Preparing…" : "Download Excel report"}
-          </button>
-          {error && <div className="notice error">{error}</div>}
-        </div>
-      )}
-    </section>
+    <span className="export">
+      <button className="btn primary" onClick={download} disabled={busy} title="Excel report with all results, inputs and parameters">
+        {busy ? "Preparing…" : "Download Excel report"}
+      </button>
+      {error && <span className="notice error inline">{error}</span>}
+    </span>
   );
 }

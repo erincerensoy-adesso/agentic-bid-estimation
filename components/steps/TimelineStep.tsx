@@ -38,10 +38,13 @@ export function TimelineStep({ state, dispatch }: { state: BidState; dispatch: D
 
   return (
     <section>
-      <h1>Baseline timeline</h1>
+      <h1>Timeline and Skills</h1>
       <p className="lead">
-        Upload the manual (no-AI) estimate in the Timeline Template format. Check each line&apos;s role and set the person
-        capability. A line with more than 1 FTE shares one capability; if people differ, split the line in Excel and upload again.
+        Upload the baseline: the manual, no-AI estimate in the Timeline Template format. Then check each line&apos;s role
+        and set its person capability (AI Native or AI Adaptive).
+      </p>
+      <p className="lead small">
+        A line with more than 1 FTE shares one capability. If the people on a line differ, split it in Excel and upload again.
       </p>
       <div className="card">
         <input type="file" accept=".xlsx" onChange={(e) => { void upload(e.target.files?.[0]); e.target.value = ""; }} disabled={busy} />
