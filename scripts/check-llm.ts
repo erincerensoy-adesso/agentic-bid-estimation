@@ -4,15 +4,39 @@
  *
  * Run: npm run check-llm
  */
+import { existsSync, readFileSync } from "node:fs";
 import { config } from "../lib/config";
-import { llmConfigured, prefillSurvey } from "../lib/prefill";
+import { llmSettings, prefillSurvey } from "../lib/prefill";
 
-const base = process.env.ANTHROPIC_BASE_URL || "https://api.anthropic.com (default)";
+/** Show only the start of a key, e.g. "sk-aihub-…(51 characters)". */
+const mask = (k: string) => `${k.slice(0, 9)}…(${k.length} characters)`;
+
+const settings = llmSettings();
 const model = process.env.BID_PREFILL_MODEL || "claude-opus-5-5";
-console.log(`Address: ${base}\nModel:   ${model}`);
+console.log(`Address: ${settings.baseURL ?? "https://api.anthropic.com (default)"}`);
+console.log(`Model:   ${model}`);
+console.log(`Key:     ${settings.key ? `${mask(settings.key)} from ${settings.keySource}` : "none"}`);
 
-if (!llmConfigured()) {
-  console.error("\nNo key found. Set ANTHROPIC_API_KEY or ANTHROPIC_AUTH_TOKEN in .env.local.");
+// Values exported in the terminal take priority over .env.local; flag any that differ.
+if (existsSync(".env.local")) {
+  const file = Object.fromEntries(
+    readFileSync(".env.local", "utf8")
+      .split(/\r?\n/)
+      .map((l) => /^\s*([A-Z_][A-Z0-9_]*)\s*=\s*(.*?)\s*$/.exec(l))
+      .filter((m): m is RegExpExecArray => Boolean(m))
+      .map((m) => [m[1], m[2].replace(/^["']|["']$/g, "")]),
+  );
+  for (const [name, value] of Object.entries(file)) {
+    const actual = process.env[name]?.trim();
+    if (value && actual && actual !== value) {
+      console.warn(`\nWarning: ${name} is also set in your terminal, and that value is used instead of the one in .env.local.`);
+      console.warn(`         Open a new terminal or run:  unset ${name}`);
+    }
+  }
+}
+
+if (!settings.key) {
+  console.error("\nNo key found. Set BID_LLM_API_KEY in .env.local.");
   process.exit(1);
 }
 
@@ -29,8 +53,9 @@ try {
 } catch (e) {
   const err = e as { status?: number; message?: string };
   console.error(`\nFAILED${err.status ? ` (HTTP ${err.status})` : ""}: ${err.message ?? e}`);
-  if (err.status === 401 || err.status === 403) console.error("→ The key was rejected. Try ANTHROPIC_AUTH_TOKEN instead of ANTHROPIC_API_KEY, or the other way round.");
-  if (err.status === 404) console.error("→ Wrong address or model. ANTHROPIC_BASE_URL must not end in /v1, and the proxy must offer /v1/messages; check the model name with your AI hub admins.");
+  if (err.status === 401 || err.status === 403)
+    console.error("→ The key was rejected. Check that the Key line above starts with the hub key's prefix (e.g. sk-aihub-) and that there is no warning about the terminal.");
+  if (err.status === 404) console.error("→ Wrong address or model. The address must not end in /v1, and the proxy must offer /v1/messages; check the model name.");
   if (err.status === 400) console.error("→ The proxy or model may not support structured outputs. Ask whether it passes Anthropic's output_config.format through.");
   process.exit(1);
 }

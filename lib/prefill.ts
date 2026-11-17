@@ -57,19 +57,53 @@ function linkRules(cfg: EstimationConfig): string {
 
 export class PrefillError extends Error {}
 
-/** True when a credential for the LLM is configured (direct API key, or a Bearer token for a proxy). */
+function env(name: string): string | undefined {
+  return process.env[name]?.trim() || undefined;
+}
+
+export interface LlmSettings {
+  /** Proxy address (e.g. the adesso AI hub), or undefined for the Anthropic API. */
+  baseURL?: string;
+  key?: string;
+  /** Which environment variable the key came from, for diagnostics. */
+  keySource?: string;
+}
+
+/**
+ * App-specific variables (BID_LLM_*) win over the generic ANTHROPIC_* ones, so a key that is
+ * already set in the operator's shell for other tools cannot silently replace the proxy key.
+ */
+export function llmSettings(): LlmSettings {
+  const baseURL = env("BID_LLM_BASE_URL") ?? env("ANTHROPIC_BASE_URL");
+  for (const name of ["BID_LLM_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_API_KEY"]) {
+    const key = env(name);
+    if (key) return { baseURL, key, keySource: name };
+  }
+  return { baseURL };
+}
+
+/** True when a credential for the LLM is configured. */
 export function llmConfigured(): boolean {
-  return Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN);
+  return Boolean(llmSettings().key);
+}
+
+function makeClient(): Anthropic {
+  const { baseURL, key } = llmSettings();
+  const common = { timeout: 180_000, maxRetries: 1 };
+  if (!baseURL) return new Anthropic(key ? { ...common, apiKey: key } : common);
+  // Behind a proxy: send exactly the configured key, in both common header styles, and nothing else
+  // (an explicit key also stops the SDK from picking up a saved Anthropic login).
+  return new Anthropic({ ...common, baseURL, apiKey: key, defaultHeaders: { "x-api-key": key ?? null } });
 }
 
 /**
  * Server-side refusal fallbacks are an Anthropic API feature that proxies (e.g. an internal AI hub) usually do not
- * pass through, so they default to off when ANTHROPIC_BASE_URL points elsewhere.
+ * pass through, so they default to off when a proxy address is set.
  */
 function fallbacksEnabled(): boolean {
-  const setting = process.env.BID_PREFILL_FALLBACKS;
+  const setting = env("BID_PREFILL_FALLBACKS");
   if (setting) return setting !== "off";
-  return !process.env.ANTHROPIC_BASE_URL;
+  return !llmSettings().baseURL;
 }
 
 export async function prefillSurvey(docs: RfpDocument[], cfg: EstimationConfig): Promise<PrefillResult> {
@@ -81,7 +115,7 @@ export async function prefillSurvey(docs: RfpDocument[], cfg: EstimationConfig):
     throw new PrefillError("The RFP is too long for automatic pre-fill. Answer the survey manually.");
   }
 
-  const client = new Anthropic({ timeout: 180_000, maxRetries: 1 });
+  const client = makeClient();
   const model = process.env.BID_PREFILL_MODEL || "claude-opus-5-5";
   const useFallbacks = fallbacksEnabled();
 

@@ -8,7 +8,7 @@ Implements `Bid Estimation App — MVP Specification v0.2`.
 
 ```bash
 npm install
-cp .env.example .env.local   # then set ANTHROPIC_API_KEY (only needed for RFP pre-fill)
+cp .env.example .env.local   # then set BID_LLM_API_KEY (only needed for RFP pre-fill)
 npm run dev                  # http://localhost:3000
 ```
 
@@ -55,11 +55,13 @@ with `zod` (structured survey pre-fill), `vitest` (tests). The chart is plain SV
   memory only so the pre-fill can be re-run; after a page reload, upload the RFP again to re-run it.
 - **RFP handling:** text is extracted in memory on the server and sent to the LLM; nothing is written to disk.
   The prompt treats the RFP as untrusted data and instructs the model to ignore instructions inside it.
-- **LLM settings** (`.env.local`, see `.env.example`): `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN` (server only,
-  never sent to the browser), `ANTHROPIC_BASE_URL` to go through an internal LLM proxy such as the adesso AI hub
-  (base address without `/v1`; the proxy must offer Anthropic's `/v1/messages`), `BID_PREFILL_MODEL` (default
-  `claude-opus-5-5`; use the name your provider gives the model), and `BID_PREFILL_FALLBACKS` (Anthropic's server-side
-  refusal fallback; on by default for the Anthropic API, off by default behind a proxy).
+- **LLM settings** (`.env.local`, see `.env.example`): `BID_LLM_BASE_URL` to go through an internal LLM proxy such as
+  the adesso AI hub (base address without `/v1`; the proxy must offer Anthropic's `/v1/messages`), `BID_LLM_API_KEY`
+  (server only, never sent to the browser; behind a proxy it is sent as both `Authorization: Bearer` and `x-api-key`),
+  `BID_PREFILL_MODEL` (default `claude-opus-5-5`; use the name your provider gives the model), and
+  `BID_PREFILL_FALLBACKS` (Anthropic's server-side refusal fallback; on by default for the Anthropic API, off behind a
+  proxy). The generic `ANTHROPIC_*` variables also work, but the `BID_LLM_*` names win, so a key already exported in
+  your terminal for other tools cannot replace the one meant for this app.
 - **Checking the LLM connection:** `npm run check-llm` sends a two-sentence sample RFP through the pre-fill using the
   settings in `.env.local`, and explains the most common failures.
 - **Week columns** are identified by position between `Role` and `Total`; `#`, `Domain` and `Total per Tech Domain`
