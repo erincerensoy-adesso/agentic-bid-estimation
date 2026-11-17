@@ -1,0 +1,11 @@
+## 1. Implementation
+- [x] 1.1 Config file and model catalog
+- [x] 1.2 Pure calculation module (complexity, potential, enablement, gain, overrides, token cost, AI timeline)
+- [x] 1.3 Timeline Template parser with validation and role mapping
+- [x] 1.4 RFP text extraction and LLM survey pre-fill
+- [x] 1.5 Excel report with the seven sheets
+- [x] 1.6 Six-step wizard UI with browser persistence
+- [x] 1.7 Unit tests: worked example, boundary checks, overrides, parser, report
+- [x] 1.8 README with stack and reason
+- [ ] 1.9 Verify the parser against the real Timeline Template file
+- [ ] 1.10 Verify the RFP pre-fill against a real RFP with an API key
