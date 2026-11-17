@@ -331,3 +331,51 @@ td.notes { white-space: normal; min-width: 260px; max-width: 420px; color: var(-
 .re-track span { display: block; height: 8px; border-radius: 4px; background: var(--ink-2); }
 .re-c { font-size: 0.75rem; color: var(--ink-2); min-width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
 .re-gain { font-size: 0.8rem; font-weight: 700; text-align: right; color: var(--brand); font-variant-numeric: tabular-nums; }
+
+/* Staffing & Skills */
+.staff-cards { display: flex; flex-wrap: wrap; gap: 1rem; align-items: stretch; margin-bottom: 1.5rem; }
+.staff-cards .side-card { flex: 1 1 300px; }
+.staff-cards .side-card:first-child { flex-basis: 360px; }
+.upload-empty { display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+.upload-empty h2 { margin: 0; }
+.upload-btn { cursor: pointer; }
+label.btn { display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+.file-row { display: flex; align-items: center; gap: 0.75rem; }
+.file-icon { width: 40px; height: 40px; flex: none; border-radius: var(--radius-sm); background: var(--ok-bg); color: var(--ok); display: flex; align-items: center; justify-content: center; }
+.file-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.file-meta strong { font-size: 0.95rem; word-break: break-all; }
+.file-meta span { font-size: 0.8rem; color: var(--ink-2); }
+.file-figures { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; }
+.file-figures > div { display: flex; flex-direction: column; gap: 2px; }
+.file-figures dt { font-size: 0.75rem; color: var(--muted); }
+.file-figures dd { margin: 0; font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.check-item { display: flex; align-items: flex-start; gap: 0.625rem; font-size: 0.875rem; line-height: 1.4; }
+.check-icon { display: inline-flex; width: 20px; height: 20px; flex: none; border-radius: 50%; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+.check-item.ok .check-icon { background: var(--ok-bg); color: var(--ok); }
+.check-item.warn .check-icon { background: var(--warn-bg); color: var(--warn-ink); }
+.check-item.warn { color: var(--warn-ink); }
+.checks-foot { margin-top: auto; }
+.mix-row { display: grid; grid-template-columns: 112px minmax(0, 1fr) 64px; gap: 0.625rem; align-items: center; }
+.mix-val { font-size: 0.75rem; color: var(--ink-2); text-align: right; font-variant-numeric: tabular-nums; }
+.bulk { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.staff-table { min-width: 1080px; }
+.staff-table td { vertical-align: middle; }
+.staff-table tr.needs td { background: #fffbf0; }
+.line-title { display: block; font-weight: 700; }
+.line-sub { display: block; font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+.staff-table select { width: 170px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; }
+.seg.open { border-color: #e0a100; }
+.seg button { font: inherit; font-size: 0.8rem; padding: 0.5rem 0.75rem; min-height: 40px; border: 0; background: var(--surface); color: var(--ink-2); cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button.on { background: var(--brand); color: #fff; font-weight: 600; }
+.seg button:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.choose { display: block; font-size: 0.7rem; font-weight: 600; color: var(--warn-ink); margin-top: 4px; }
+.spark { display: flex; align-items: flex-end; gap: 2px; height: 32px; width: 280px; }
+.spark i { display: block; flex: 1 1 0; min-width: 2px; border-radius: 2px 2px 0 0; background: var(--bar-base); }
+.spark i.zero { background: var(--line); }
+.spark.strong i { background: var(--brand); }
+.spark.strong i.zero { background: var(--line); }
+.staff-table td.strong { font-weight: 600; }
+.foot-caps { font-weight: 500 !important; color: var(--ink-2); }
