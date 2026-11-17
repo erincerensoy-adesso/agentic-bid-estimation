@@ -26,7 +26,8 @@ The system SHALL compute per-role complexity from the weighted survey and, for e
 from that role's configured maximum gain (complexity 0) to its minimum potential (complexity 1). Per-line enablement
 comes from the best allowed model tier, best allowed harness and person capability, and the per-line gain is
 `floor(role) + (Potential − floor(role)) × E`; role gain is baseline PD over adjusted PD. Roles that mostly work with
-people have narrow, low ranges (Delivery Manager 1.0x–1.6x) and Dev the widest (1.5x–10x).
+people have narrow, low ranges (Delivery Manager 1.2x–1.6x) and Dev the widest (2x–10x). Every role's minimum gain
+(floor), used when only weak models are allowed, is 1.2x.
 
 #### Scenario: Worked example with the spec's uniform range
 - **WHEN** the spec section 11 inputs are entered and every role uses floor 1.5x, 10x at complexity 0 and 2x at complexity 1
@@ -34,11 +35,11 @@ people have narrow, low ranges (Delivery Manager 1.0x–1.6x) and Dev the widest
 
 #### Scenario: People-facing roles stay low
 - **WHEN** a bid has complexity around 0.6 for every role with full enablement
-- **THEN** Delivery Manager's gain is between 1.0x and 1.5x, RE's is above Delivery Manager's, and Dev's is the highest
+- **THEN** Delivery Manager's gain is between 1.2x and 1.5x, RE's is above Delivery Manager's, and Dev's is the highest
 
 #### Scenario: No capable model
 - **WHEN** no allowed model reaches the AI Assisted tier
-- **THEN** every role is held at its own floor and a blocking warning is shown
+- **THEN** every role is held at its minimum gain of 1.2x and a blocking warning is shown
 
 ### Requirement: Manual override
 The system SHALL offer one slider per role from 1.0x to 10x in 0.1 steps, set to the computed gain, whose value replaces

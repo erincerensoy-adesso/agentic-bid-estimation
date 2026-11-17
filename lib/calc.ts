@@ -100,7 +100,7 @@ export interface CalcResult {
 }
 
 export const NO_MODEL_WARNING =
-  "No allowed model reaches the AI Assisted tier. Gains are held at each role's floor (no AI enablement).";
+  "No allowed model reaches the AI Assisted tier. Gains are held at the minimum gain for each role.";
 
 const EPS = 1e-9;
 

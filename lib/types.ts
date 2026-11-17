@@ -86,7 +86,7 @@ export interface RoleMappingRule {
 }
 
 export interface GainRange {
-  /** Gain with no AI enablement (E = 0). */
+  /** Minimum gain: only weak models allowed (E = 0). Gains start here and rise with E. */
   floor: number;
   /** Gain on the most complex project (complexity 1) with full enablement. */
   minPotential: number;

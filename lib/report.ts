@@ -244,7 +244,7 @@ export async function buildReport(
   ] as const) p.addRow([k, v]);
   p.addRow([]);
   p.addRow(["Gain ranges per role"]).font = { bold: true };
-  headerRow(p, ["Role", "Floor (no AI)", "Min potential (complexity 1)", "Max gain (complexity 0)"]);
+  headerRow(p, ["Role", "Minimum gain (weak models only)", "Min potential (complexity 1)", "Max gain (complexity 0)"]);
   for (const r of cfg.roles) {
     const g = cfg.gainRanges[r];
     p.addRow([r, g.floor, g.minPotential, g.maxGain]);

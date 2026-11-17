@@ -15,6 +15,10 @@ describe("per-role gain ranges (config)", () => {
     }
   });
 
+  it("uses a 1.2x minimum gain (floor) for every role", () => {
+    for (const role of config.roles) expect(config.gainRanges[role].floor).toBe(1.2);
+  });
+
   it("hits each role's maxGain at complexity 0, minPotential at 1, and floor without enablement", () => {
     for (const role of config.roles) {
       const r = config.gainRanges[role];
@@ -30,7 +34,7 @@ describe("per-role gain ranges (config)", () => {
       "Delivery Manager": 0.646, RE: 0.667, QA: 0.615, "UX-UI": 0.778, Architect: 0.6, Dev: 0.605, DevOps: 0.583,
     };
     const g = Object.fromEntries(config.roles.map((r) => [r, gainPotential(C[r], r, config)])) as Record<Role, number>;
-    expect(g["Delivery Manager"]).toBeGreaterThanOrEqual(1);
+    expect(g["Delivery Manager"]).toBeGreaterThanOrEqual(1.2);
     expect(g["Delivery Manager"]).toBeLessThanOrEqual(1.5);
     expect(g.RE).toBeGreaterThan(g["Delivery Manager"]);
     expect(g.RE).toBeLessThan(2.5);
