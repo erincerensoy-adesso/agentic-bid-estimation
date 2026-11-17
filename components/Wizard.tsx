@@ -11,7 +11,7 @@ import { ResultsStep } from "./steps/ResultsStep";
 import { SurveyStep } from "./steps/SurveyStep";
 import { TimelineStep } from "./steps/TimelineStep";
 
-const STEPS = ["Bid Initials", "Timeline and Skills", "Models and harness", "Complexity Survey", "Results"] as const;
+const STEPS = ["Initials", "Staffing & Skills", "Models & Harness", "Domain Complexity", "Results"] as const;
 
 export function Wizard() {
   const [state, dispatch] = useReducer(reducer, initialState);

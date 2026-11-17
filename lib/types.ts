@@ -40,6 +40,8 @@ export interface SurveyAnswer {
   source: AnswerSource;
   /** Present when the RFP pre-fill suggested an answer. */
   suggestion?: LlmSuggestion;
+  /** The RFP pre-fill looked for this question and the RFP does not address it. */
+  notFound?: boolean;
 }
 
 export interface ModelEntry {
@@ -131,6 +133,8 @@ export interface EstimationConfig {
   pricing: PricingConfig;
   roleMapping: RoleMappingRule[];
   survey: SurveyQuestion[];
+  /** Sections the survey is shown in; every question appears in exactly one. */
+  surveyGroups: { name: string; questions: QuestionId[] }[];
   /** Plain-language name for each answer level, simplest first. */
   surveyScaleLabels: [string, string, string, string];
   surveyLinks: SurveyLink[];

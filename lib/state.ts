@@ -85,7 +85,9 @@ export function reducer(s: BidState, a: Action): BidState {
         const operatorTouched = prev && prev.level != null && prev.source !== "llm";
         if (sug === "not_found") {
           // The question stays empty for the operator unless they already answered it.
-          answers[id] = operatorTouched ? { level: prev!.level, source: "operator" } : { level: null, source: "operator" };
+          answers[id] = operatorTouched
+            ? { level: prev!.level, source: "operator", notFound: true }
+            : { level: null, source: "operator", notFound: true };
         } else if (operatorTouched) {
           answers[id] = { level: prev!.level, source: sourceFor(prev!.level, sug), suggestion: sug };
         } else {

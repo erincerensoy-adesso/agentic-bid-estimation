@@ -52,7 +52,10 @@ export function availability(q: QuestionId, answers: Answers, cfg: EstimationCon
 /** Set one answer and bring linked answers into line. Returns a new answers object. */
 export function setAnswer(answers: Answers, q: QuestionId, level: Level | null, cfg: EstimationConfig): Answers {
   const prev = answers[q];
-  const next: Answers = { ...answers, [q]: { level, source: sourceFor(level, prev), suggestion: prev?.suggestion } };
+  const next: Answers = {
+    ...answers,
+    [q]: { level, source: sourceFor(level, prev), suggestion: prev?.suggestion, ...(prev?.notFound ? { notFound: true } : {}) },
+  };
   return enforceLinks(next, cfg, q);
 }
 

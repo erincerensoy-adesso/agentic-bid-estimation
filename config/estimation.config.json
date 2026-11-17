@@ -182,6 +182,12 @@
       "help": "The testing evidence the client requires beyond normal testing."
     }
   ],
+  "surveyGroups": [
+    { "name": "Integration", "questions": ["Q1", "Q2"] },
+    { "name": "Regulation and risk", "questions": ["Q3", "Q4", "Q8", "Q12"] },
+    { "name": "Product and starting point", "questions": ["Q5", "Q6", "Q7"] },
+    { "name": "Requirements and delivery", "questions": ["Q9", "Q10", "Q11"] }
+  ],
   "surveyScaleLabels": [ "Simplest", "Moderate", "Complex", "Most complex" ],
   "surveyLinks": [
     {

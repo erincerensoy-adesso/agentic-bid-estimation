@@ -33,7 +33,7 @@ export function ModelsStep({ state, dispatch, result }: { state: BidState; dispa
 
   return (
     <section>
-      <h1>Models and harness</h1>
+      <h1>Models &amp; Harness</h1>
       <p className="lead">Tick everything the client allows. The calculation uses the best model tier and the best harness among those ticked.</p>
 
       <div className="inputs-in-effect">

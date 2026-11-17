@@ -38,7 +38,7 @@ export function TimelineStep({ state, dispatch }: { state: BidState; dispatch: D
 
   return (
     <section>
-      <h1>Timeline and Skills</h1>
+      <h1>Staffing &amp; Skills</h1>
       <p className="lead">
         Upload the baseline: the manual, no-AI estimate in the Timeline Template format. Then check each line&apos;s role
         and set its person capability (AI Native or AI Adaptive).

@@ -62,3 +62,18 @@ describe("survey link: Q1 integration points -> Q2 integration complexity", () =
     expect(res.missing.some((m) => m.includes("contradicts"))).toBe(true);
   });
 });
+
+describe("survey groups and not-found questions", () => {
+  it("puts every question in exactly one group", () => {
+    const ids = config.surveyGroups.flatMap((g) => g.questions);
+    expect([...ids].sort()).toEqual(config.survey.map((q) => q.id).sort());
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("marks questions the RFP does not address, and keeps the mark after a manual answer", () => {
+    let s = reducer(initialState, { type: "applySuggestions", suggestions: { Q10: "not_found" } });
+    expect(s.answers.Q10).toEqual({ level: null, source: "operator", notFound: true });
+    s = reducer(s, { type: "setAnswer", q: "Q10", level: 1 });
+    expect(s.answers.Q10).toMatchObject({ level: 1, source: "operator", notFound: true });
+  });
+});
