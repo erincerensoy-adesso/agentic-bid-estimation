@@ -1,5 +1,6 @@
 import { config } from "./config";
 import { enforceLinks, setAnswer } from "./survey";
+import type { PricingPlan } from "./types";
 import type { AnswerSource, Capability, Level, LlmSuggestion, QuestionId, Role, SurveyAnswer, Timeline } from "./types";
 
 export interface PrefillStatus {
@@ -17,6 +18,8 @@ export interface BidState {
   allowedHarnessIds: string[];
   answers: Partial<Record<QuestionId, SurveyAnswer>>;
   overrides: Partial<Record<Role, number>>;
+  /** Claude plan shown in the headline cost and the role table. */
+  pricingPlan: PricingPlan;
 }
 
 export const initialState: BidState = {
@@ -29,6 +32,7 @@ export const initialState: BidState = {
   allowedHarnessIds: [],
   answers: {},
   overrides: {},
+  pricingPlan: "enterprise",
 };
 
 export type Action =
@@ -46,7 +50,8 @@ export type Action =
   | { type: "setModels"; ids: string[] }
   | { type: "toggleHarness"; id: string; on: boolean }
   | { type: "setAnswer"; q: QuestionId; level: Level | null }
-  | { type: "setOverride"; role: Role; gain: number | null };
+  | { type: "setOverride"; role: Role; gain: number | null }
+  | { type: "setPricingPlan"; plan: PricingPlan };
 
 function sourceFor(level: Level | null, suggestion?: LlmSuggestion): AnswerSource {
   if (!suggestion) return "operator";
@@ -114,6 +119,8 @@ export function reducer(s: BidState, a: Action): BidState {
       return { ...s, allowedHarnessIds: toggle(s.allowedHarnessIds, a.id, a.on) };
     case "setAnswer":
       return { ...s, answers: setAnswer(s.answers, a.q, a.level, config) };
+    case "setPricingPlan":
+      return { ...s, pricingPlan: a.plan };
     case "setOverride": {
       const overrides = { ...s.overrides };
       if (a.gain == null) delete overrides[a.role];

@@ -94,6 +94,28 @@ export interface GainRange {
   maxGain: number;
 }
 
+export type PricingPlan = "enterprise" | "team" | "individual";
+export type TeamSeatType = "standard" | "premium";
+
+export interface PricingConfig {
+  weeksPerMonth: number;
+  enterprise: { label: string; seatPerMonth: number; minSeats: number; note: string };
+  team: {
+    label: string;
+    minSeats: number;
+    maxSeats: number;
+    seatTypes: Record<TeamSeatType, { name: string; annualPerMonth: number; monthlyPerMonth: number }>;
+    seatTypeByRole: Record<Role, TeamSeatType>;
+    note: string;
+  };
+  individual: {
+    label: string;
+    minPlan: { name: string; perMonth: number };
+    maxPlan: { name: string; perMonth: number };
+    note: string;
+  };
+}
+
 export interface EstimationConfig {
   roles: Role[];
   /** Per-role gain range; see the comment in config/estimation.config.json. */
@@ -106,6 +128,7 @@ export interface EstimationConfig {
   harnesses: HarnessEntry[];
   personFactors: Record<Capability, number>;
   tokenRates: Record<Role, { min: number; max: number }>;
+  pricing: PricingConfig;
   roleMapping: RoleMappingRule[];
   survey: SurveyQuestion[];
   /** Plain-language name for each answer level, simplest first. */

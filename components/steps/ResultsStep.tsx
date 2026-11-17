@@ -7,6 +7,7 @@ import { fmt2, fmt3, fmtGain, fmtPD, fmtUSD } from "@/lib/format";
 import type { Action, BidState } from "@/lib/state";
 import { ComparisonChart } from "../ComparisonChart";
 import { ExportButton } from "../ExportButton";
+import { PLAN_SHORT, PlanCosts } from "../PlanCosts";
 
 export function ResultsStep({ state, dispatch, result }: { state: BidState; dispatch: Dispatch<Action>; result: CalcResult }) {
   if (!result.ready) {
@@ -25,6 +26,8 @@ export function ResultsStep({ state, dispatch, result }: { state: BidState; disp
   const { totals } = result;
   const s = config.slider;
   const slowest = result.lines.find((l) => l.line.id === t.slowestLineId);
+  const plan = result.costs![state.pricingPlan];
+  const planRole = (role: string) => plan.roles.find((r) => r.role === role)!;
 
   return (
     <section>
@@ -42,7 +45,7 @@ export function ResultsStep({ state, dispatch, result }: { state: BidState; disp
         <Stat label="Overall gain" value={fmtGain(totals.overallGain)} accent />
         <Stat label="Baseline weeks" value={String(t.baselineWeeks)} />
         <Stat label="AI weeks" value={String(t.aiWeeks)} accent />
-        <Stat label="Token cost" value={`${fmtUSD(totals.tokenCostMin)} – ${fmtUSD(totals.tokenCostMax)}`} />
+        <Stat label={`AI cost · ${PLAN_SHORT[state.pricingPlan]}`} value={`${fmtUSD(plan.min)} – ${fmtUSD(plan.max)}`} />
       </div>
 
       <div className="card">
@@ -66,7 +69,7 @@ export function ResultsStep({ state, dispatch, result }: { state: BidState; disp
               <tr>
                 <th>Role</th><th className="num">Baseline PD</th><th className="num">Complexity</th><th className="num">Computed gain</th>
                 <th className="slider-col">Applied gain</th><th className="num">Adjusted PD</th><th className="num">PD saved</th>
-                <th className="num">FTE-months</th><th className="num">Token min</th><th className="num">Token max</th>
+                <th className="num">FTE-months</th><th className="num">AI cost min</th><th className="num">AI cost max</th>
               </tr>
             </thead>
             <tbody>
@@ -96,8 +99,8 @@ export function ResultsStep({ state, dispatch, result }: { state: BidState; disp
                   <td className="num">{fmtPD(r.adjustedPD)}</td>
                   <td className="num">{fmtPD(r.pdSaved)}</td>
                   <td className="num">{fmt2(r.fteMonths)}</td>
-                  <td className="num">{fmtUSD(r.tokenCostMin)}</td>
-                  <td className="num">{fmtUSD(r.tokenCostMax)}</td>
+                  <td className="num">{fmtUSD(planRole(r.role).min)}</td>
+                  <td className="num">{fmtUSD(planRole(r.role).max)}</td>
                 </tr>
               ))}
             </tbody>
@@ -110,13 +113,15 @@ export function ResultsStep({ state, dispatch, result }: { state: BidState; disp
                 <td className="num">{fmtPD(totals.adjustedPD)}</td>
                 <td className="num">{fmtPD(totals.pdSaved)}</td>
                 <td className="num">{fmt2(totals.fteMonths)}</td>
-                <td className="num">{fmtUSD(totals.tokenCostMin)}</td>
-                <td className="num">{fmtUSD(totals.tokenCostMax)}</td>
+                <td className="num">{fmtUSD(plan.min)}</td>
+                <td className="num">{fmtUSD(plan.max)}</td>
               </tr>
             </tfoot>
           </table>
         </div>
       </div>
+
+      <PlanCosts result={result} plan={state.pricingPlan} dispatch={dispatch} />
 
       <div className="card">
         <h2>Baseline against AI-adjusted effort</h2>

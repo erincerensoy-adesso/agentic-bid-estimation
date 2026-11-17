@@ -25,6 +25,7 @@ export function ExportButton({ state, result }: { state: BidState; result: CalcR
           allowedHarnessIds: state.allowedHarnessIds,
           answers: state.answers,
           overrides: state.overrides,
+          pricingPlan: state.pricingPlan,
         }),
       });
       if (!res.ok) {

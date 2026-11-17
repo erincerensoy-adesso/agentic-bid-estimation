@@ -34,6 +34,33 @@
     "DevOps": { "min": 1000, "max": 2000 },
     "Delivery Manager": { "min": 300, "max": 600 }
   },
+  "pricing": {
+    "_comment": "Claude plan prices in USD, from claude.com/pricing (checked 17 November 2026; 'Price and plans are subject to change'). Seats are counted per resource line as the line's peak AI FTE rounded up to whole people, paid in whole months for the weeks the line is active on the AI timeline.",
+    "weeksPerMonth": 4,
+    "enterprise": {
+      "label": "Claude Enterprise (token based)",
+      "seatPerMonth": 20,
+      "minSeats": 20,
+      "note": "Seat price plus usage at API rates; usage uses the token rates per role. The 20-seat minimum applies to the organisation's contract, not per project."
+    },
+    "team": {
+      "label": "Claude Team (seat based)",
+      "minSeats": 2,
+      "maxSeats": 150,
+      "seatTypes": {
+        "standard": { "name": "Standard seat", "annualPerMonth": 20, "monthlyPerMonth": 25 },
+        "premium": { "name": "Premium seat (includes Claude Code)", "annualPerMonth": 100, "monthlyPerMonth": 125 }
+      },
+      "seatTypeByRole": { "Delivery Manager": "standard", "RE": "standard", "UX-UI": "standard", "Architect": "premium", "QA": "premium", "Dev": "premium", "DevOps": "premium" },
+      "note": "Min uses annual billing, max monthly billing. Seats have weekly usage limits; heavy agentic use can hit them."
+    },
+    "individual": {
+      "label": "Claude Individual (Max 5x – 20x)",
+      "minPlan": { "name": "Max (5x Pro usage)", "perMonth": 100 },
+      "maxPlan": { "name": "Ultra (the Max 20x plan)", "perMonth": 200 },
+      "note": "Min puts everyone on Max, max puts everyone on Ultra (the 20x plan). Monthly billing only. Individual plans are bought per person."
+    }
+  },
   "dayRates": {
     "_comment": "Reserved for a later release (human cost). Not used by the MVP calculation.",
     "Architect": null,

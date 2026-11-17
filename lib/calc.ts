@@ -2,6 +2,7 @@
  * Pure, side-effect-free estimation engine (spec section 6).
  * No rounding is applied to intermediate values; rounding is a display concern.
  */
+import { computePlanCosts, type PlanCost } from "./pricing";
 import { contradictions } from "./survey";
 import type {
   CalcInput,
@@ -94,6 +95,8 @@ export interface CalcResult {
   roles: RoleResult[];
   totals: Totals;
   aiTimeline: AiTimeline | null;
+  /** AI cost under each Claude plan; null until results are available. */
+  costs: Record<import("./types").PricingPlan, PlanCost> | null;
 }
 
 export const NO_MODEL_WARNING =
@@ -214,6 +217,7 @@ export function calculate(input: CalcInput, cfg: EstimationConfig, catalog: Mode
     roles: [],
     totals: emptyTotals(),
     aiTimeline: null,
+    costs: null,
   };
   if (!base.ready) return base;
 
@@ -293,7 +297,9 @@ export function calculate(input: CalcInput, cfg: EstimationConfig, catalog: Mode
   totals.pdSaved = totals.baselinePD - totals.adjustedPD;
   totals.overallGain = totals.adjustedPD > EPS ? totals.baselinePD / totals.adjustedPD : 0;
 
-  return { ...base, lines, roles, totals, aiTimeline: computeAiTimeline(lines, cfg) };
+  const aiTimeline = computeAiTimeline(lines, cfg);
+  const costs = aiTimeline ? computePlanCosts(lines, roles, aiTimeline, cfg) : null;
+  return { ...base, lines, roles, totals, aiTimeline, costs };
 }
 
 /** Spec 6.7: compress the plan until the slowest line works at its baseline staffing. */

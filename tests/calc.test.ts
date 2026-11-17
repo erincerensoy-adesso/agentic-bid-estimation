@@ -269,3 +269,43 @@ describe("model catalog (adFactory Model Comparison study)", () => {
     for (const m of modelCatalog) if (m.tier !== "Unproven") expect(m.score).toBeTruthy();
   });
 });
+
+describe("AI cost by Claude plan (worked example: 8 AI weeks)", () => {
+  // Seats per line = ceil(AI FTE): 1,2,2,1,1,1,1,1,1,2,1 = 14 people; every line is active
+  // for 7 or 8 AI weeks = 2 months at 4 weeks per month, so 28 seat-months.
+  it("counts people and seat-months from the AI timeline", () => {
+    const { costs } = calculate(workedExample(), specCfg, modelCatalog);
+    expect(costs!.team.people).toBe(14);
+    expect(costs!.team.seatMonths).toBe(28);
+  });
+
+  it("Enterprise = $20 per seat-month plus token usage", () => {
+    const { costs, totals } = calculate(workedExample(), specCfg, modelCatalog);
+    expect(costs!.enterprise.min).toBeCloseTo(28 * 20 + totals.tokenCostMin, 6);
+    expect(costs!.enterprise.max).toBeCloseTo(28 * 20 + totals.tokenCostMax, 6);
+    expect(Math.round(costs!.enterprise.min)).toBe(18983);
+  });
+
+  it("Team uses Standard seats for DM, RE, UX-UI and Premium for the rest; annual (min) to monthly (max)", () => {
+    // Standard: DM 2 + RE 4 + UX-UI 4 = 10 seat-months; Premium: QA 4 + Architect 4 + Dev 8 + DevOps 2 = 18.
+    const { costs } = calculate(workedExample(), specCfg, modelCatalog);
+    expect(costs!.team.min).toBe(10 * 20 + 18 * 100);
+    expect(costs!.team.max).toBe(10 * 25 + 18 * 125);
+    expect(costs!.team.roles.find((r) => r.role === "Dev")!.detail).toMatch(/Premium/);
+  });
+
+  it("Individual = everyone on Max ($100) to everyone on Ultra / Max 20x ($200)", () => {
+    const { costs } = calculate(workedExample(), specCfg, modelCatalog);
+    expect(costs!.individual.min).toBe(28 * 100);
+    expect(costs!.individual.max).toBe(28 * 200);
+  });
+
+  it("notes Enterprise's 20-seat minimum when the project uses fewer seats", () => {
+    const { costs } = calculate(workedExample(), specCfg, modelCatalog);
+    expect(costs!.enterprise.notes.some((n) => n.includes("20-seat minimum"))).toBe(true);
+  });
+
+  it("has no costs until results are ready", () => {
+    expect(calculate({ ...workedExample(), allowedHarnessIds: [] }, specCfg, modelCatalog).costs).toBeNull();
+  });
+});

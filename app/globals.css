@@ -160,3 +160,11 @@ td.notes { white-space: normal; min-width: 260px; max-width: 420px; color: var(-
 .page-head h1 { margin: 0; }
 .export { display: inline-flex; align-items: center; gap: 0.75rem; }
 .notice.inline { margin: 0; padding: 0.35rem 0.6rem; }
+h3 { font-size: 0.95rem; margin: 1.25rem 0 0.5rem; }
+.segmented { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; margin-bottom: 0.75rem; }
+.segmented button { font: inherit; border: 0; background: var(--surface); padding: 0.45rem 0.9rem; cursor: pointer; color: var(--ink-2); }
+.segmented button + button { border-left: 1px solid var(--line); }
+.segmented button.on { background: var(--brand); color: #fff; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: var(--brand-tint); }
+.notes-list { margin: 0.75rem 0 0; padding-left: 1.2rem; color: var(--ink-2); font-size: 0.85rem; }

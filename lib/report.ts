@@ -1,11 +1,14 @@
 /** Excel report (spec 8.2). Numbers are written as numbers; display rounding uses number formats. */
 import ExcelJS from "exceljs";
 import { calculate } from "./calc";
-import type { CalcInput, EstimationConfig, ModelEntry, QuestionId } from "./types";
+import { PLANS } from "./pricing";
+import type { CalcInput, EstimationConfig, ModelEntry, PricingPlan, QuestionId } from "./types";
 
 export interface ReportInput extends CalcInput {
   bidName: string;
   clientName: string;
+  /** Claude plan used for the headline AI cost; defaults to Enterprise. */
+  pricingPlan?: PricingPlan;
 }
 
 const PD = "#,##0.0";
@@ -44,6 +47,8 @@ export async function buildReport(
   const res = calculate(input, cfg, catalog);
   if (!res.ready) throw new Error(`Results are not available: ${res.missing.join(" ")}`);
   const t = res.aiTimeline!;
+  const costs = res.costs!;
+  const plan: PricingPlan = input.pricingPlan ?? "enterprise";
   const wb = new ExcelJS.Workbook();
   wb.created = date;
 
@@ -61,8 +66,12 @@ export async function buildReport(
     ["Overall gain", res.totals.overallGain, GAIN],
     ["Baseline weeks", t.baselineWeeks],
     ["AI weeks", t.aiWeeks],
-    ["Token cost min (USD)", res.totals.tokenCostMin, USD],
-    ["Token cost max (USD)", res.totals.tokenCostMax, USD],
+    ["Claude plan", costs[plan].label],
+    ["AI cost min (USD)", costs[plan].min, USD],
+    ["AI cost max (USD)", costs[plan].max, USD],
+    ...PLANS.filter((p) => p !== plan).map(
+      (p) => [`Alternative: ${costs[p].label} (USD)`, `${Math.round(costs[p].min).toLocaleString("en-US")} – ${Math.round(costs[p].max).toLocaleString("en-US")}`] as [string, string],
+    ),
     ["Best allowed model", res.modelInEffect.model?.name ?? "—"],
     ["Model tier", res.modelInEffect.tierLabel ?? "—"],
     ["Model factor M", res.modelInEffect.M, "0.00"],
@@ -155,13 +164,45 @@ export async function buildReport(
   at.getColumn(totalCol).numFmt = PD;
   at.getRow(1).numFmt = "0";
 
-  // Token Cost
-  const tc = wb.addWorksheet("Token Cost");
-  widths(tc, [18, 16, 16, 12, 16, 16]);
+  // AI Cost: all three Claude plans
+  const tc = wb.addWorksheet("AI Cost");
+  widths(tc, [34, 26, 10, 13, 16, 16, 16, 16, 16, 16]);
+  tc.addRow(["Comparison"]).font = { bold: true };
+  headerRow(tc, ["Plan", "Used for headline", "People", "Seat-months", "Total min (USD)", "Total max (USD)"]);
+  for (const p of PLANS) {
+    const row = tc.addRow([costs[p].label, p === plan ? "Yes" : "", costs[p].people, costs[p].seatMonths, costs[p].min, costs[p].max]);
+    row.getCell(5).numFmt = USD;
+    row.getCell(6).numFmt = USD;
+    if (p === plan) row.font = { bold: true };
+  }
+  tc.addRow([
+    `Seats: each resource line needs its peak AI FTE rounded up to whole people, paid in whole months (${cfg.pricing.weeksPerMonth} weeks) for the weeks it is active on the AI timeline.`,
+  ]);
+  for (const p of PLANS) {
+    tc.addRow([]);
+    tc.addRow([costs[p].label]).font = { bold: true };
+    headerRow(tc, ["Role", "Seat / plan", "People", "Seat-months", "Seats min", "Seats max", "Token usage min", "Token usage max", "Total min", "Total max"]);
+    for (const r of costs[p].roles) {
+      const row = tc.addRow([r.role, r.detail, r.people, r.seatMonths, r.seatMin, r.seatMax, r.usageMin, r.usageMax, r.min, r.max]);
+      for (let c = 5; c <= 10; c++) row.getCell(c).numFmt = USD;
+    }
+    const tot = tc.addRow([
+      "Total", null, costs[p].people, costs[p].seatMonths,
+      ...(["seatMin", "seatMax", "usageMin", "usageMax"] as const).map((k) => costs[p].roles.reduce((a, r) => a + r[k], 0)),
+      costs[p].min, costs[p].max,
+    ]);
+    for (let c = 5; c <= 10; c++) tot.getCell(c).numFmt = USD;
+    boldRow(tot);
+    for (const n of costs[p].notes) tc.addRow([n]).font = { italic: true, color: { argb: "FF52514E" } };
+  }
+  tc.addRow([]);
+  tc.addRow(["Token usage (Enterprise)"]).font = { bold: true };
   headerRow(tc, ["Role", "Rate min (USD/FTE-month)", "Rate max (USD/FTE-month)", "FTE-months", "Cost min (USD)", "Cost max (USD)"]);
-  for (const r of res.roles) tc.addRow([r.role, r.rateMin, r.rateMax, r.fteMonths, r.tokenCostMin, r.tokenCostMax]);
-  boldRow(tc.addRow(["Total", null, null, res.totals.fteMonths, res.totals.tokenCostMin, res.totals.tokenCostMax]));
-  [USD, USD, FTE, USD, USD].forEach((f, i) => (tc.getColumn(i + 2).numFmt = f));
+  for (const r of res.roles) {
+    const row = tc.addRow([r.role, r.rateMin, r.rateMax, r.fteMonths, r.tokenCostMin, r.tokenCostMax]);
+    [2, 3, 5, 6].forEach((c) => (row.getCell(c).numFmt = USD));
+    row.getCell(4).numFmt = FTE;
+  }
 
   // Inputs
   const inp = wb.addWorksheet("Inputs");
@@ -221,6 +262,14 @@ export async function buildReport(
   p.addRow([]);
   p.addRow(["Person factors (P)"]).font = { bold: true };
   for (const [k, v] of Object.entries(cfg.personFactors)) p.addRow([k, v]);
+  p.addRow([]);
+  p.addRow(["Claude plan prices (USD per seat or person per month)"]).font = { bold: true };
+  const pr = cfg.pricing;
+  p.addRow(["Enterprise seat", pr.enterprise.seatPerMonth]);
+  for (const st of Object.values(pr.team.seatTypes)) p.addRow([`Team ${st.name}, annual / monthly billing`, st.annualPerMonth, st.monthlyPerMonth]);
+  p.addRow([`Individual ${pr.individual.minPlan.name}`, pr.individual.minPlan.perMonth]);
+  p.addRow([`Individual ${pr.individual.maxPlan.name}`, pr.individual.maxPlan.perMonth]);
+  p.addRow(["Weeks per month (seat billing)", pr.weeksPerMonth]);
   p.addRow([]);
   p.addRow(["Token rates (USD / FTE-month)"]).font = { bold: true };
   headerRow(p, ["Role", "Min", "Max"]);

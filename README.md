@@ -38,9 +38,10 @@ with `zod` (structured survey pre-fill), `vitest` (tests). The chart is plain SV
 
 | Path | Contents |
 |---|---|
-| `config/estimation.config.json` | **All calculation parameters** (spec 9.2): survey, weights, **gain range per role** (floor, gain at highest and lowest complexity), factors, PD per month, token rates, role-mapping keywords. Edit and restart. |
+| `config/estimation.config.json` | **All calculation parameters** (spec 9.2): survey, weights, **gain range per role**, **Claude plan prices** (floor, gain at highest and lowest complexity), factors, PD per month, token rates, role-mapping keywords. Edit and restart. |
 | `config/model-catalog.json` | Model catalog (spec 9.1), taken from the adFactory Model Comparison study: tier, borderline flag, vendor and origin, licence, the benchmark score that placed each model, and the study's notes. Edit to add or re-tier models. |
 | `lib/calc.ts` | Pure calculation engine (spec 6), no I/O |
+| `lib/pricing.ts` | AI cost under three Claude plans: Enterprise (seat + token usage), Team (Standard/Premium seats), Individual (Max to Ultra / Max 20x). Prices live in `pricing` in the config |
 | `lib/survey.ts` | Survey consistency rules (e.g. Q1 "None" means Q2 "No integrations"), driven by `surveyLinks` in the config |
 | `lib/timelineParser.ts` | Timeline Template parser (spec 5.2) |
 | `lib/prefill.ts`, `lib/rfp.ts` | RFP text extraction and LLM survey pre-fill (spec 7) |

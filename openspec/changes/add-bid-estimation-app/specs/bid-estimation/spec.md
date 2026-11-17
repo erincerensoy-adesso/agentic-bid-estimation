@@ -81,3 +81,18 @@ exactly when Q1 is "None".
 #### Scenario: Contradictory pre-fill
 - **WHEN** the RFP pre-fill suggests Q1 above "None" and Q2 "No integrations"
 - **THEN** Q1 is kept, Q2 is left for the operator, and results stay blocked until the contradiction is resolved
+
+### Requirement: AI cost by Claude plan
+The system SHALL show the AI cost under three Claude plans and let the operator choose the one that drives the headline
+cost, the role table and the report summary: Enterprise (seat fee plus token usage at the per-role token rates), Team
+(Standard or Premium seat per role; annual billing as minimum, monthly as maximum) and Individual (everyone on Max as
+minimum, everyone on Ultra / Max 20x as maximum). Seats per resource line are the line's peak AI FTE rounded up to whole
+people, paid in whole months for the weeks the line is active on the AI timeline. Plan prices live in the config.
+
+#### Scenario: Team plan
+- **WHEN** the operator chooses the Team plan for the worked example (14 people, 28 seat-months; 10 Standard, 18 Premium)
+- **THEN** the AI cost is USD 2,000 (annual billing) to USD 2,500 (monthly billing)
+
+#### Scenario: Report
+- **WHEN** the Excel report is downloaded
+- **THEN** its AI Cost sheet compares all three plans with a per-role breakdown, and the Summary names the chosen plan
