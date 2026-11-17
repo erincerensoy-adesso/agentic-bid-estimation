@@ -223,7 +223,7 @@ td.notes { white-space: normal; min-width: 260px; max-width: 420px; color: var(-
 .g-axis { min-height: 16px; font-size: 0.75rem; color: var(--muted); }
 .g-axis .g-track { background: none; height: 16px; }
 .g-label { display: flex; flex-direction: column; }
-.g-title { font-size: 0.875rem; font-weight: 500; }
+.g-title { font-size: 0.875rem; font-weight: 700; }
 .g-sub { font-size: 0.75rem; color: var(--muted); }
 .g-track { position: relative; height: 28px; background: var(--track); border-radius: 6px; }
 .g-scale { position: absolute; inset: 0 72px 0 0; }
