@@ -58,3 +58,20 @@ Resource Lines, AI Timeline, Token Cost, Inputs and Parameters sheets, writing n
 #### Scenario: Overrides in the report
 - **WHEN** a role gain is overridden
 - **THEN** the Role Comparison sheet marks it and keeps the computed gain alongside
+
+### Requirement: Survey clarity and consistency
+The survey SHALL label answers on a plain-language scale (Simplest, Moderate, Complex, Most complex) instead of raw
+scores, show a one-line explanation per question, and keep linked questions consistent: Q2 is "No integrations"
+exactly when Q1 is "None".
+
+#### Scenario: No integration points
+- **WHEN** the operator answers Q1 "None"
+- **THEN** Q2 is set to "No integrations" and its other answers are unavailable, with the reason shown
+
+#### Scenario: Integration points exist
+- **WHEN** Q1 is above "None"
+- **THEN** Q2 "No integrations" is unavailable, and a previous "No integrations" answer is cleared for the operator to choose again
+
+#### Scenario: Contradictory pre-fill
+- **WHEN** the RFP pre-fill suggests Q1 above "None" and Q2 "No integrations"
+- **THEN** Q1 is kept, Q2 is left for the operator, and results stay blocked until the contradiction is resolved

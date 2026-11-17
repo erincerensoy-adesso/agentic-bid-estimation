@@ -122,7 +122,6 @@ table.grid th, table.grid td { padding: 0.3rem 0.45rem; }
 .level input { margin-top: 0.15rem; }
 .level.chosen { border-color: var(--ink); background: #faf9f7; }
 .level.suggested { outline: 2px dashed #8fb6e8; outline-offset: -3px; }
-.score { font-weight: 700; color: var(--muted); min-width: 2rem; }
 .excerpt { margin: 0.6rem 0 0; padding: 0.4rem 0.8rem; border-left: 3px solid #8fb6e8; color: var(--ink-2); font-size: 0.86rem; }
 .excerpt cite { color: var(--muted); font-style: normal; }
 
@@ -146,3 +145,12 @@ table.grid th, table.grid td { padding: 0.3rem 0.45rem; }
 .tooltip { position: absolute; transform: translate(-50%, calc(-100% - 10px)); background: var(--ink); color: #fff; padding: 0.45rem 0.65rem; border-radius: 6px; font-size: 0.8rem; pointer-events: none; white-space: nowrap; }
 .tooltip .muted { color: #c3c2b7; }
 td.notes { white-space: normal; min-width: 260px; max-width: 420px; color: var(--ink-2); font-size: 0.84rem; }
+.qhelp { margin: -0.3rem 0 0.6rem; color: var(--ink-2); font-size: 0.88rem; }
+.qlink { margin: 0.5rem 0 0; font-size: 0.84rem; color: var(--ink-2); }
+.level-body { display: flex; flex-direction: column; gap: 0.2rem; }
+.level-scale { display: flex; align-items: center; gap: 0.4rem; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 600; }
+.level-text { color: var(--ink); }
+.level.disabled { opacity: 0.4; cursor: not-allowed; background: var(--bg); }
+.meter { display: inline-flex; gap: 2px; }
+.meter i { width: 8px; height: 8px; border-radius: 2px; background: var(--line); }
+.meter i.on { background: var(--ink-2); }

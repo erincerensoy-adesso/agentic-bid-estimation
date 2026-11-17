@@ -1,6 +1,6 @@
 {
   "_comment": "All calculation parameters (spec section 6 / 9.2). Every value is a starting value to calibrate. Edit and restart the app.",
-  "roles": ["Delivery Manager", "RE", "QA", "UX-UI", "Architect", "Dev", "DevOps"],
+  "roles": [ "Delivery Manager", "RE", "QA", "UX-UI", "Architect", "Dev", "DevOps" ],
   "floor": 1.5,
   "maxGain": 10,
   "minPotential": 2,
@@ -8,13 +8,7 @@
   "aiWeekWorkingDays": 5,
   "defaultWorkingDaysPerWeek": 5,
   "slider": { "min": 1.5, "max": 10, "step": 0.1 },
-  "modelTierFactors": {
-    "AI Native": 1.0,
-    "AI Native (borderline)": 0.85,
-    "AI Assisted": 0.5,
-    "Not Recommended": 0.0,
-    "Unproven": 0.0
-  },
+  "modelTierFactors": { "AI Native": 1.0, "AI Native (borderline)": 0.85, "AI Assisted": 0.5, "Not Recommended": 0.0, "Unproven": 0.0 },
   "harnesses": [
     { "id": "aifactory-claude-code", "name": "AIFactory on Claude Code", "factor": 1.0 },
     { "id": "aifactory-copilot", "name": "AIFactory on GitHub Copilot", "factor": 1.0 },
@@ -35,42 +29,145 @@
   },
   "dayRates": {
     "_comment": "Reserved for a later release (human cost). Not used by the MVP calculation.",
-    "Architect": null, "Dev": null, "QA": null, "RE": null, "UX-UI": null, "DevOps": null, "Delivery Manager": null
+    "Architect": null,
+    "Dev": null,
+    "QA": null,
+    "RE": null,
+    "UX-UI": null,
+    "DevOps": null,
+    "Delivery Manager": null
   },
   "roleMapping": [
-    { "role": "DevOps", "contains": ["devops"], "wholeWords": [] },
-    { "role": "Architect", "contains": ["arch"], "wholeWords": [] },
-    { "role": "Dev", "contains": ["dev", "engineer"], "wholeWords": [] },
-    { "role": "QA", "contains": ["qa", "quality", "test"], "wholeWords": [] },
-    { "role": "RE", "contains": ["analyst", "requirement"], "wholeWords": ["ba"] },
-    { "role": "UX-UI", "contains": ["ux", "ui", "design"], "wholeWords": [] },
-    { "role": "Delivery Manager", "contains": ["delivery", "manager", "pm"], "wholeWords": [] }
+    {
+      "role": "DevOps",
+      "contains": [ "devops" ],
+      "wholeWords": []
+    },
+    {
+      "role": "Architect",
+      "contains": [ "arch" ],
+      "wholeWords": []
+    },
+    {
+      "role": "Dev",
+      "contains": [ "dev", "engineer" ],
+      "wholeWords": []
+    },
+    {
+      "role": "QA",
+      "contains": [ "qa", "quality", "test" ],
+      "wholeWords": []
+    },
+    {
+      "role": "RE",
+      "contains": [ "analyst", "requirement" ],
+      "wholeWords": [ "ba" ]
+    },
+    {
+      "role": "UX-UI",
+      "contains": [ "ux", "ui", "design" ],
+      "wholeWords": []
+    },
+    {
+      "role": "Delivery Manager",
+      "contains": [ "delivery", "manager", "pm" ],
+      "wholeWords": []
+    }
   ],
   "survey": [
-    { "id": "Q1", "question": "Number of integration points", "levels": ["None", "1–3", "4–10", "More than 10"] },
-    { "id": "Q2", "question": "Integration complexity", "levels": ["No integrations", "Standard, documented APIs", "Mix including asynchronous or legacy interfaces", "Mostly legacy, proprietary or undocumented"] },
-    { "id": "Q3", "question": "Regulation", "levels": ["None", "General data protection only (GDPR, KVKK)", "Sector regulation (banking, insurance, health, energy)", "Heavy regulation with audit or certification"] },
-    { "id": "Q4", "question": "Mission criticality", "levels": ["Internal tool, downtime tolerated", "Business-important", "Business-critical", "Mission-critical, 24×7"] },
-    { "id": "Q5", "question": "Importance of UX", "levels": ["Low, functional UI is enough", "Standard", "High", "A differentiator, with a dedicated design system or user research"] },
-    { "id": "Q6", "question": "Greenfield or legacy", "levels": ["Greenfield", "Extension of an existing system", "Modernization of a documented legacy system", "Modernization of an undocumented legacy system"] },
-    { "id": "Q7", "question": "Data migration", "levels": ["None", "Simple, one source", "Moderate, several sources or cleansing", "Complex, large volume, reconciliation required"] },
-    { "id": "Q8", "question": "Security and data residency", "levels": ["No special constraints", "Standard enterprise security", "Strict: in-country or on-premises models required", "Air-gapped or classified environment"] },
-    { "id": "Q9", "question": "Clarity of requirements in the RFP", "levels": ["Detailed and unambiguous", "Mostly clear", "High level", "Vague or contradictory"] },
-    { "id": "Q10", "question": "Tech stack familiarity", "levels": ["Mainstream stack", "Mainstream with some niche parts", "Mostly niche", "Proprietary or rare"] },
-    { "id": "Q11", "question": "Client dependencies and approval cycles", "levels": ["Few, fast decisions", "Moderate", "Many stakeholders, slow approvals", "Heavy governance, external parties"] },
-    { "id": "Q12", "question": "Testing and compliance evidence required", "levels": ["Standard testing", "Extended (performance, security)", "Formal test documentation and sign-offs", "Certified or regulator-witnessed testing"] }
+    {
+      "id": "Q1",
+      "question": "Number of integration points",
+      "levels": [ "None", "1–3", "4–10", "More than 10" ],
+      "help": "How many external systems the solution must exchange data with."
+    },
+    {
+      "id": "Q2",
+      "question": "Integration complexity",
+      "levels": [ "No integrations", "Standard, documented APIs", "Mix including asynchronous or legacy interfaces", "Mostly legacy, proprietary or undocumented" ],
+      "help": "The hardest kind of interface among those integrations."
+    },
+    {
+      "id": "Q3",
+      "question": "Regulation",
+      "levels": [ "None", "General data protection only (GDPR, KVKK)", "Sector regulation (banking, insurance, health, energy)", "Heavy regulation with audit or certification" ],
+      "help": "The strictest regulation the solution and its delivery must comply with."
+    },
+    {
+      "id": "Q4",
+      "question": "Mission criticality",
+      "levels": [ "Internal tool, downtime tolerated", "Business-important", "Business-critical", "Mission-critical, 24×7" ],
+      "help": "What happens to the client's business if the system is down."
+    },
+    {
+      "id": "Q5",
+      "question": "Importance of UX",
+      "levels": [ "Low, functional UI is enough", "Standard", "High", "A differentiator, with a dedicated design system or user research" ],
+      "help": "How much the success of the solution depends on its user experience."
+    },
+    {
+      "id": "Q6",
+      "question": "Greenfield or legacy",
+      "levels": [ "Greenfield", "Extension of an existing system", "Modernization of a documented legacy system", "Modernization of an undocumented legacy system" ],
+      "help": "What the team starts from."
+    },
+    {
+      "id": "Q7",
+      "question": "Data migration",
+      "levels": [ "None", "Simple, one source", "Moderate, several sources or cleansing", "Complex, large volume, reconciliation required" ],
+      "help": "Data that must be moved from existing systems into the new one."
+    },
+    {
+      "id": "Q8",
+      "question": "Security and data residency",
+      "levels": [ "No special constraints", "Standard enterprise security", "Strict: in-country or on-premises models required", "Air-gapped or classified environment" ],
+      "help": "Constraints on where data and AI models may run."
+    },
+    {
+      "id": "Q9",
+      "question": "Clarity of requirements in the RFP",
+      "levels": [ "Detailed and unambiguous", "Mostly clear", "High level", "Vague or contradictory" ],
+      "help": "How well the RFP defines what must be built."
+    },
+    {
+      "id": "Q10",
+      "question": "Tech stack familiarity",
+      "levels": [ "Mainstream stack", "Mainstream with some niche parts", "Mostly niche", "Proprietary or rare" ],
+      "help": "How common the required technologies are."
+    },
+    {
+      "id": "Q11",
+      "question": "Client dependencies and approval cycles",
+      "levels": [ "Few, fast decisions", "Moderate", "Many stakeholders, slow approvals", "Heavy governance, external parties" ],
+      "help": "How quickly the client can decide and approve."
+    },
+    {
+      "id": "Q12",
+      "question": "Testing and compliance evidence required",
+      "levels": [ "Standard testing", "Extended (performance, security)", "Formal test documentation and sign-offs", "Certified or regulator-witnessed testing" ],
+      "help": "The testing evidence the client requires beyond normal testing."
+    }
+  ],
+  "surveyScaleLabels": [ "Simplest", "Moderate", "Complex", "Most complex" ],
+  "surveyLinks": [
+    {
+      "_comment": "Q2 depends on Q1: level 0 of each means 'no integrations'. Q1 at level 0 sets Q2 to level 0; Q1 above 0 makes Q2's level 0 unavailable.",
+      "primary": "Q1",
+      "dependent": "Q2",
+      "level": 0
+    }
   ],
   "weights": {
     "_comment": "Weight 0–3 per question and role: how much that factor limits AI gain for that role.",
-    "Q1":  { "Delivery Manager": 2, "RE": 2, "QA": 3, "UX-UI": 0, "Architect": 3, "Dev": 3, "DevOps": 2 },
-    "Q2":  { "Delivery Manager": 1, "RE": 2, "QA": 3, "UX-UI": 0, "Architect": 3, "Dev": 3, "DevOps": 2 },
-    "Q3":  { "Delivery Manager": 2, "RE": 3, "QA": 3, "UX-UI": 1, "Architect": 2, "Dev": 2, "DevOps": 2 },
-    "Q4":  { "Delivery Manager": 2, "RE": 1, "QA": 3, "UX-UI": 0, "Architect": 3, "Dev": 2, "DevOps": 3 },
-    "Q5":  { "Delivery Manager": 0, "RE": 1, "QA": 1, "UX-UI": 3, "Architect": 0, "Dev": 2, "DevOps": 0 },
-    "Q6":  { "Delivery Manager": 1, "RE": 2, "QA": 2, "UX-UI": 1, "Architect": 3, "Dev": 3, "DevOps": 2 },
-    "Q7":  { "Delivery Manager": 1, "RE": 1, "QA": 2, "UX-UI": 0, "Architect": 2, "Dev": 3, "DevOps": 2 },
-    "Q8":  { "Delivery Manager": 1, "RE": 1, "QA": 2, "UX-UI": 0, "Architect": 3, "Dev": 2, "DevOps": 3 },
-    "Q9":  { "Delivery Manager": 2, "RE": 3, "QA": 2, "UX-UI": 2, "Architect": 2, "Dev": 2, "DevOps": 0 },
+    "Q1": { "Delivery Manager": 2, "RE": 2, "QA": 3, "UX-UI": 0, "Architect": 3, "Dev": 3, "DevOps": 2 },
+    "Q2": { "Delivery Manager": 1, "RE": 2, "QA": 3, "UX-UI": 0, "Architect": 3, "Dev": 3, "DevOps": 2 },
+    "Q3": { "Delivery Manager": 2, "RE": 3, "QA": 3, "UX-UI": 1, "Architect": 2, "Dev": 2, "DevOps": 2 },
+    "Q4": { "Delivery Manager": 2, "RE": 1, "QA": 3, "UX-UI": 0, "Architect": 3, "Dev": 2, "DevOps": 3 },
+    "Q5": { "Delivery Manager": 0, "RE": 1, "QA": 1, "UX-UI": 3, "Architect": 0, "Dev": 2, "DevOps": 0 },
+    "Q6": { "Delivery Manager": 1, "RE": 2, "QA": 2, "UX-UI": 1, "Architect": 3, "Dev": 3, "DevOps": 2 },
+    "Q7": { "Delivery Manager": 1, "RE": 1, "QA": 2, "UX-UI": 0, "Architect": 2, "Dev": 3, "DevOps": 2 },
+    "Q8": { "Delivery Manager": 1, "RE": 1, "QA": 2, "UX-UI": 0, "Architect": 3, "Dev": 2, "DevOps": 3 },
+    "Q9": { "Delivery Manager": 2, "RE": 3, "QA": 2, "UX-UI": 2, "Architect": 2, "Dev": 2, "DevOps": 0 },
     "Q10": { "Delivery Manager": 0, "RE": 0, "QA": 1, "UX-UI": 0, "Architect": 2, "Dev": 3, "DevOps": 2 },
     "Q11": { "Delivery Manager": 3, "RE": 2, "QA": 1, "UX-UI": 2, "Architect": 1, "Dev": 1, "DevOps": 1 },
     "Q12": { "Delivery Manager": 1, "RE": 1, "QA": 3, "UX-UI": 0, "Architect": 1, "Dev": 1, "DevOps": 1 }

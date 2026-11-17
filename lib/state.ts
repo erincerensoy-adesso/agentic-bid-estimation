@@ -1,3 +1,5 @@
+import { config } from "./config";
+import { enforceLinks, setAnswer } from "./survey";
 import type { AnswerSource, Capability, Level, LlmSuggestion, QuestionId, Role, SurveyAnswer, Timeline } from "./types";
 
 export interface PrefillStatus {
@@ -60,8 +62,10 @@ export function reducer(s: BidState, a: Action): BidState {
   switch (a.type) {
     case "reset":
       return initialState;
-    case "load":
-      return { ...initialState, ...a.state, prefill: { state: "idle" } };
+    case "load": {
+      const loaded = { ...initialState, ...a.state, prefill: { state: "idle" as const } };
+      return { ...loaded, answers: enforceLinks(loaded.answers, config) };
+    }
     case "setMeta":
       return { ...s, bidName: a.bidName ?? s.bidName, clientName: a.clientName ?? s.clientName };
     case "setRfpFiles":
@@ -83,7 +87,7 @@ export function reducer(s: BidState, a: Action): BidState {
           answers[id] = { level: sug.level, source: "llm", suggestion: sug };
         }
       }
-      return { ...s, answers };
+      return { ...s, answers: enforceLinks(answers, config) };
     }
     case "setTimeline":
       return { ...s, timeline: a.timeline, overrides: {} };
@@ -108,13 +112,8 @@ export function reducer(s: BidState, a: Action): BidState {
       return { ...s, allowedModelIds: a.ids };
     case "toggleHarness":
       return { ...s, allowedHarnessIds: toggle(s.allowedHarnessIds, a.id, a.on) };
-    case "setAnswer": {
-      const prev = s.answers[a.q];
-      return {
-        ...s,
-        answers: { ...s.answers, [a.q]: { level: a.level, source: sourceFor(a.level, prev?.suggestion), suggestion: prev?.suggestion } },
-      };
-    }
+    case "setAnswer":
+      return { ...s, answers: setAnswer(s.answers, a.q, a.level, config) };
     case "setOverride": {
       const overrides = { ...s.overrides };
       if (a.gain == null) delete overrides[a.role];

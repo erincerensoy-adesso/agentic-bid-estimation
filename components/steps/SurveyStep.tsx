@@ -3,21 +3,32 @@
 import type { Dispatch, RefObject } from "react";
 import { config } from "@/lib/config";
 import type { Action, BidState } from "@/lib/state";
+import { availability } from "@/lib/survey";
 import type { Level, QuestionId } from "@/lib/types";
 import { PrefillNotice } from "../PrefillNotice";
 import { runPrefill } from "../runPrefill";
 
-const SCORES = ["0", "1/3", "2/3", "1"];
+/** Four-step bar showing how far along the simplest-to-most-complex scale an answer sits. */
+function Meter({ level }: { level: number }) {
+  return (
+    <span className="meter" aria-hidden>
+      {[0, 1, 2, 3].map((i) => <i key={i} className={i <= level ? "on" : ""} />)}
+    </span>
+  );
+}
 
 export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dispatch: Dispatch<Action>; rfpFiles: RefObject<File[]> }) {
   const answered = config.survey.filter((q) => state.answers[q.id]?.level != null).length;
   const canRerun = (rfpFiles.current?.length ?? 0) > 0 && state.prefill.state !== "running";
+  const scale = config.surveyScaleLabels;
 
   return (
     <section>
       <h1>Complexity survey</h1>
       <p className="lead">
-        Twelve questions; 0 is simplest. Answers suggested from the RFP are marked. Change any answer you disagree with.
+        Twelve questions about the project. For each, pick the answer that fits best. Answers run from{" "}
+        <strong>{scale[0].toLowerCase()}</strong> on the left to <strong>{scale[3].toLowerCase()}</strong> on the right; the
+        more complex the answers, the lower the AI gain.
         <span className="muted"> {answered} of {config.survey.length} answered.</span>
       </p>
       <div className="toolbar">
@@ -30,8 +41,10 @@ export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dis
 
       <ol className="survey">
         {config.survey.map((q) => {
-          const a = state.answers[q.id as QuestionId];
+          const id = q.id as QuestionId;
+          const a = state.answers[id];
           const sug = a?.suggestion;
+          const avail = availability(id, state.answers, config);
           return (
             <li key={q.id} className={`question ${a?.level == null ? "unanswered" : ""}`}>
               <div className="question-head">
@@ -40,20 +53,32 @@ export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dis
                 {sug && a?.source === "llm" && <span className="badge llm">Suggested from RFP · {sug.confidence} confidence</span>}
                 {sug && a?.source === "llm-overridden" && <span className="badge overridden">Overridden</span>}
               </div>
+              <p className="qhelp">{q.help}</p>
               <div className="levels" role="radiogroup" aria-label={q.question}>
-                {q.levels.map((label, i) => (
-                  <label key={i} className={`level ${a?.level === i ? "chosen" : ""} ${sug?.level === i ? "suggested" : ""}`}>
-                    <input
-                      type="radio"
-                      name={q.id}
-                      checked={a?.level === i}
-                      onChange={() => dispatch({ type: "setAnswer", q: q.id as QuestionId, level: i as Level })}
-                    />
-                    <span className="score">{SCORES[i]}</span>
-                    <span>{label}</span>
-                  </label>
-                ))}
+                {q.levels.map((text, i) => {
+                  const disabled = !avail.allowed.has(i as Level);
+                  return (
+                    <label
+                      key={i}
+                      className={`level ${a?.level === i ? "chosen" : ""} ${sug?.level === i ? "suggested" : ""} ${disabled ? "disabled" : ""}`}
+                      title={disabled ? avail.reason : `${scale[i]} (score ${(i / 3).toFixed(2)})`}
+                    >
+                      <input
+                        type="radio"
+                        name={q.id}
+                        checked={a?.level === i}
+                        disabled={disabled}
+                        onChange={() => dispatch({ type: "setAnswer", q: id, level: i as Level })}
+                      />
+                      <span className="level-body">
+                        <span className="level-scale"><Meter level={i} /> {scale[i]}</span>
+                        <span className="level-text">{text}</span>
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
+              {avail.reason && <p className="qlink">{avail.reason}</p>}
               {sug && (
                 <blockquote className="excerpt">
                   “{sug.excerpt}” <cite>— {sug.location}</cite>

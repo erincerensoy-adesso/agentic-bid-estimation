@@ -39,10 +39,20 @@ function surveyText(cfg: EstimationConfig): string {
   return cfg.survey
     .map(
       (q) =>
-        `${q.id}. ${q.question}\n` +
+        `${q.id}. ${q.question} (${q.help})\n` +
         q.levels.map((l, i) => `  level_${i}: ${l}`).join("\n"),
     )
-    .join("\n\n");
+    .join("\n\n") + linkRules(cfg);
+}
+
+function linkRules(cfg: EstimationConfig): string {
+  if (cfg.surveyLinks.length === 0) return "";
+  const lines = cfg.surveyLinks.map((l) => {
+    const p = cfg.survey.find((q) => q.id === l.primary)!;
+    const d = cfg.survey.find((q) => q.id === l.dependent)!;
+    return `- ${d.id} is "${d.levels[l.level]}" exactly when ${p.id} is "${p.levels[l.level]}".`;
+  });
+  return `\n\nKeep answers consistent:\n${lines.join("\n")}`;
 }
 
 export class PrefillError extends Error {}

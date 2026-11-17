@@ -12,7 +12,7 @@ Source specification: "Bid Estimation App — MVP Specification", v0.2, 15 Novem
 ## Project Conventions
 - All calculation parameters live in `config/estimation.config.json`; the model catalog in `config/model-catalog.json`
 - `lib/calc.ts` is pure and side-effect-free; every formula change needs a unit test
-- Commit messages in imperative mood; changes through pull requests
+- Commit messages in imperative mood
 
 ## Important Constraints
 - Internal tool for adesso; English only; no login

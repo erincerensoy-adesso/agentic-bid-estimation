@@ -68,6 +68,15 @@ export interface SurveyQuestion {
   id: QuestionId;
   question: string;
   levels: [string, string, string, string];
+  /** One-line explanation shown under the question. */
+  help: string;
+}
+
+/** `dependent` must be at `level` exactly when `primary` is (e.g. Q1 "None" and Q2 "No integrations"). */
+export interface SurveyLink {
+  primary: QuestionId;
+  dependent: QuestionId;
+  level: Level;
 }
 
 export interface RoleMappingRule {
@@ -91,6 +100,9 @@ export interface EstimationConfig {
   tokenRates: Record<Role, { min: number; max: number }>;
   roleMapping: RoleMappingRule[];
   survey: SurveyQuestion[];
+  /** Plain-language name for each answer level, simplest first. */
+  surveyScaleLabels: [string, string, string, string];
+  surveyLinks: SurveyLink[];
   weights: Record<string, Record<Role, number>>;
 }
 

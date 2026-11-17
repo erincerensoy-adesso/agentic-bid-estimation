@@ -2,6 +2,7 @@
  * Pure, side-effect-free estimation engine (spec section 6).
  * No rounding is applied to intermediate values; rounding is a display concern.
  */
+import { contradictions } from "./survey";
 import type {
   CalcInput,
   Capability,
@@ -182,6 +183,7 @@ export function missingInputs(input: CalcInput, cfg: EstimationConfig): string[]
   if (input.allowedHarnessIds.length === 0) missing.push("Select at least one allowed harness.");
   const unanswered = cfg.survey.filter((q) => input.answers[q.id as QuestionId]?.level == null).length;
   if (unanswered) missing.push(`${unanswered} survey question(s) are unanswered.`);
+  missing.push(...contradictions(input.answers, cfg));
   return missing;
 }
 
