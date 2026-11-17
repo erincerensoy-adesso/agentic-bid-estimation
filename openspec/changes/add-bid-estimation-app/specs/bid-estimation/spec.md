@@ -22,20 +22,26 @@ SHALL require the operator to set a role and a person capability (AI Native or A
 - **THEN** it is not mapped to RE
 
 ### Requirement: Gain calculation
-The system SHALL compute per-role complexity from the weighted survey, a geometric gain potential from 10x to 2x,
-per-line enablement from the best allowed model tier, best allowed harness and person capability, and a per-line gain
-of `FLOOR + (Potential − FLOOR) × E`, with role gain as baseline PD over adjusted PD.
+The system SHALL compute per-role complexity from the weighted survey and, for each role, a geometric gain potential
+from that role's configured maximum gain (complexity 0) to its minimum potential (complexity 1). Per-line enablement
+comes from the best allowed model tier, best allowed harness and person capability, and the per-line gain is
+`floor(role) + (Potential − floor(role)) × E`; role gain is baseline PD over adjusted PD. Roles that mostly work with
+people have narrow, low ranges (Delivery Manager 1.0x–1.6x) and Dev the widest (1.5x–10x).
 
-#### Scenario: Worked example
-- **WHEN** the spec section 11 inputs are entered
+#### Scenario: Worked example with the spec's uniform range
+- **WHEN** the spec section 11 inputs are entered and every role uses floor 1.5x, 10x at complexity 0 and 2x at complexity 1
 - **THEN** total adjusted PD is 331.2, overall gain 4.86x, token cost USD 18,423 to 32,813, and the AI timeline is 8 weeks
+
+#### Scenario: People-facing roles stay low
+- **WHEN** a bid has complexity around 0.6 for every role with full enablement
+- **THEN** Delivery Manager's gain is between 1.0x and 1.5x, RE's is above Delivery Manager's, and Dev's is the highest
 
 #### Scenario: No capable model
 - **WHEN** no allowed model reaches the AI Assisted tier
-- **THEN** every gain is 1.50x and a blocking warning is shown
+- **THEN** every role is held at its own floor and a blocking warning is shown
 
 ### Requirement: Manual override
-The system SHALL offer one slider per role from 1.5x to 10x in 0.1 steps, set to the computed gain, whose value replaces
+The system SHALL offer one slider per role from 1.0x to 10x in 0.1 steps, set to the computed gain, whose value replaces
 the gain of every line of that role, with a Reset control.
 
 #### Scenario: Override drives the AI timeline

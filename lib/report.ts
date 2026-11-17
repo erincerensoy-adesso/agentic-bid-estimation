@@ -199,9 +199,15 @@ export async function buildReport(
   widths(p, [28, ...cfg.roles.map(() => 16)]);
   p.addRow(["Scalars"]).font = { bold: true };
   for (const [k, v] of [
-    ["FLOOR", cfg.floor], ["MAX_GAIN", cfg.maxGain], ["MIN_POTENTIAL", cfg.minPotential],
     ["PD_PER_MONTH", cfg.pdPerMonth], ["AI week working days", cfg.aiWeekWorkingDays],
   ] as const) p.addRow([k, v]);
+  p.addRow([]);
+  p.addRow(["Gain ranges per role"]).font = { bold: true };
+  headerRow(p, ["Role", "Floor (no AI)", "Min potential (complexity 1)", "Max gain (complexity 0)"]);
+  for (const r of cfg.roles) {
+    const g = cfg.gainRanges[r];
+    p.addRow([r, g.floor, g.minPotential, g.maxGain]);
+  }
   p.addRow([]);
   p.addRow(["Weights matrix"]).font = { bold: true };
   headerRow(p, ["Question", ...cfg.roles]);

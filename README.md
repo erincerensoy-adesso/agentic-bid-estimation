@@ -38,7 +38,7 @@ with `zod` (structured survey pre-fill), `vitest` (tests). The chart is plain SV
 
 | Path | Contents |
 |---|---|
-| `config/estimation.config.json` | **All calculation parameters** (spec 9.2): survey, weights, floor, max gain, factors, PD per month, token rates, role-mapping keywords. Edit and restart. |
+| `config/estimation.config.json` | **All calculation parameters** (spec 9.2): survey, weights, **gain range per role** (floor, gain at highest and lowest complexity), factors, PD per month, token rates, role-mapping keywords. Edit and restart. |
 | `config/model-catalog.json` | Model catalog (spec 9.1), taken from the adFactory Model Comparison study: tier, borderline flag, vendor and origin, licence, the benchmark score that placed each model, and the study's notes. Edit to add or re-tier models. |
 | `lib/calc.ts` | Pure calculation engine (spec 6), no I/O |
 | `lib/survey.ts` | Survey consistency rules (e.g. Q1 "None" means Q2 "No integrations"), driven by `surveyLinks` in the config |

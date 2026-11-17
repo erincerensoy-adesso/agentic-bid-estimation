@@ -97,7 +97,7 @@ export interface CalcResult {
 }
 
 export const NO_MODEL_WARNING =
-  "No allowed model reaches the AI Assisted tier. Gains are held at the 1.5x floor.";
+  "No allowed model reaches the AI Assisted tier. Gains are held at each role's floor (no AI enablement).";
 
 const EPS = 1e-9;
 
@@ -134,8 +134,10 @@ export function complexityScore(role: Role, answers: CalcInput["answers"], cfg: 
   return den === 0 ? 0 : num / den;
 }
 
-export function gainPotential(c: number, cfg: EstimationConfig): number {
-  return cfg.maxGain * Math.pow(cfg.minPotential / cfg.maxGain, c);
+/** Geometric interpolation from the role's maxGain (complexity 0) to its minPotential (complexity 1). */
+export function gainPotential(c: number, role: Role, cfg: EstimationConfig): number {
+  const r = cfg.gainRanges[role];
+  return r.maxGain * Math.pow(r.minPotential / r.maxGain, c);
 }
 
 export function modelInEffect(allowedIds: string[], catalog: ModelEntry[], cfg: EstimationConfig): ModelInEffect {
@@ -164,8 +166,9 @@ export function harnessInEffect(allowedIds: string[], cfg: EstimationConfig): Ha
   return best;
 }
 
-export function lineGain(potential: number, E: number, cfg: EstimationConfig): number {
-  return cfg.floor + (potential - cfg.floor) * E;
+export function lineGain(potential: number, E: number, role: Role, cfg: EstimationConfig): number {
+  const floor = cfg.gainRanges[role].floor;
+  return floor + (potential - floor) * E;
 }
 
 /** Checks the preconditions in spec section 4. */
@@ -220,7 +223,7 @@ export function calculate(input: CalcInput, cfg: EstimationConfig, catalog: Mode
   const potential = {} as Record<Role, number>;
   for (const role of cfg.roles) {
     complexity[role] = complexityScore(role, input.answers, cfg);
-    potential[role] = gainPotential(complexity[role], cfg);
+    potential[role] = gainPotential(complexity[role], role, cfg);
   }
 
   const lines: LineResult[] = timeline.lines.map((line) => {
@@ -230,7 +233,7 @@ export function calculate(input: CalcInput, cfg: EstimationConfig, catalog: Mode
     const { start, end, activeWeeks } = activeRange(line.fte);
     const fteSum = line.fte.reduce((a, b) => a + (b || 0), 0);
     const E = mie.M * H * cfg.personFactors[capability];
-    const computedGain = lineGain(potential[role], E, cfg);
+    const computedGain = lineGain(potential[role], E, role, cfg);
     const override = input.overrides[role];
     const appliedGain = override ?? computedGain;
     return {
@@ -256,7 +259,7 @@ export function calculate(input: CalcInput, cfg: EstimationConfig, catalog: Mode
     const bpd = rl.reduce((a, l) => a + l.baselinePD, 0);
     const computedAdj = rl.reduce((a, l) => a + l.baselinePD / l.computedGain, 0);
     const adj = rl.reduce((a, l) => a + l.adjustedPD, 0);
-    const computedGain = computedAdj > EPS ? bpd / computedAdj : lineGain(potential[role], 0, cfg);
+    const computedGain = computedAdj > EPS ? bpd / computedAdj : lineGain(potential[role], 0, role, cfg);
     const override = input.overrides[role];
     const appliedGain = override ?? computedGain;
     const fteMonths = adj / cfg.pdPerMonth;

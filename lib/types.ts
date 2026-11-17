@@ -85,11 +85,19 @@ export interface RoleMappingRule {
   wholeWords: string[];
 }
 
+export interface GainRange {
+  /** Gain with no AI enablement (E = 0). */
+  floor: number;
+  /** Gain on the most complex project (complexity 1) with full enablement. */
+  minPotential: number;
+  /** Gain on the simplest project (complexity 0) with full enablement. */
+  maxGain: number;
+}
+
 export interface EstimationConfig {
   roles: Role[];
-  floor: number;
-  maxGain: number;
-  minPotential: number;
+  /** Per-role gain range; see the comment in config/estimation.config.json. */
+  gainRanges: Record<Role, GainRange>;
   pdPerMonth: number;
   aiWeekWorkingDays: number;
   defaultWorkingDaysPerWeek: number;

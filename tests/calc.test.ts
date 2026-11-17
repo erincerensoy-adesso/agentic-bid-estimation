@@ -6,7 +6,17 @@ import { calculate, NO_MODEL_WARNING } from "../lib/calc";
 import { config, modelCatalog } from "../lib/config";
 import { proposeRole } from "../lib/roleMapping";
 import { parseTimeline, TimelineParseError } from "../lib/timelineParser";
-import type { CalcInput, Level, QuestionId, Role, Timeline } from "../lib/types";
+import type { CalcInput, EstimationConfig, Level, QuestionId, Role, Timeline } from "../lib/types";
+
+/**
+ * The spec's worked example (section 11) and boundary checks assume one gain range for every role:
+ * floor 1.5x, 10x at complexity 0, 2x at complexity 1. They verify the formula with those values;
+ * the shipped config uses per-role ranges instead (see gain-ranges.test.ts).
+ */
+const specCfg: EstimationConfig = {
+  ...config,
+  gainRanges: Object.fromEntries(config.roles.map((r) => [r, { floor: 1.5, minPotential: 2, maxGain: 10 }])) as EstimationConfig["gainRanges"],
+};
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const fixture = path.join(here, "fixtures", "timeline-template.xlsx");
@@ -111,7 +121,7 @@ describe("worked example (spec 11)", () => {
   };
 
   it("produces the expected role table", () => {
-    const res = calculate(workedExample(), config, modelCatalog);
+    const res = calculate(workedExample(), specCfg, modelCatalog);
     expect(res.ready).toBe(true);
     expect(res.modelInEffect.M).toBe(1);
     expect(res.H).toBe(1);
@@ -129,7 +139,7 @@ describe("worked example (spec 11)", () => {
   });
 
   it("produces the expected totals", () => {
-    const { totals } = calculate(workedExample(), config, modelCatalog);
+    const { totals } = calculate(workedExample(), specCfg, modelCatalog);
     expect(totals.baselinePD).toBe(1610);
     expect(r1(totals.adjustedPD)).toBe(331.2);
     expect(r2(totals.overallGain)).toBe(4.86);
@@ -138,13 +148,13 @@ describe("worked example (spec 11)", () => {
   });
 
   it("explains the Dev gain via the AI Adaptive mobile line", () => {
-    const res = calculate(workedExample(), config, modelCatalog);
+    const res = calculate(workedExample(), specCfg, modelCatalog);
     const dev = res.lines.filter((l) => l.role === "Dev").map((l) => r2(l.appliedGain));
     expect(dev).toEqual([5.29, 5.29, 3.78]);
   });
 
   it("produces the expected AI timeline", () => {
-    const res = calculate(workedExample(), config, modelCatalog);
+    const res = calculate(workedExample(), specCfg, modelCatalog);
     const t = res.aiTimeline!;
     expect(t.baselineWeeks).toBe(28);
     expect(t.aiWeeks).toBe(8);
@@ -182,17 +192,17 @@ describe("boundary checks (spec 11)", () => {
   });
 
   it("all level 0, M = H = P = 1 gives 10.00 everywhere", () => {
-    const res = calculate({ ...allNative(), answers: answersAll(Array(12).fill(0)) }, config, modelCatalog);
+    const res = calculate({ ...allNative(), answers: answersAll(Array(12).fill(0)) }, specCfg, modelCatalog);
     for (const r of res.roles) expect(r2(r.appliedGain)).toBe(10);
   });
 
   it("all level 1, M = H = P = 1 gives 2.00 everywhere", () => {
-    const res = calculate({ ...allNative(), answers: answersAll(Array(12).fill(3)) }, config, modelCatalog);
+    const res = calculate({ ...allNative(), answers: answersAll(Array(12).fill(3)) }, specCfg, modelCatalog);
     for (const r of res.roles) expect(r2(r.appliedGain)).toBe(2);
   });
 
   it("M = 0 gives 1.50 everywhere with the blocking warning", () => {
-    const res = calculate({ ...allNative(), allowedModelIds: ["gpt-5.2", "jais-2"] }, config, modelCatalog);
+    const res = calculate({ ...allNative(), allowedModelIds: ["gpt-5.2", "jais-2"] }, specCfg, modelCatalog);
     expect(res.modelInEffect.M).toBe(0);
     expect(res.blockingWarning).toBe(NO_MODEL_WARNING);
     for (const r of res.roles) expect(r2(r.appliedGain)).toBe(1.5);
@@ -202,16 +212,16 @@ describe("boundary checks (spec 11)", () => {
 describe("inputs in effect and overrides", () => {
   it("uses the best model tier and the best harness", () => {
     const base = workedExample();
-    let res = calculate({ ...base, allowedModelIds: ["gpt-5", "claude-opus-4.5"] }, config, modelCatalog);
+    let res = calculate({ ...base, allowedModelIds: ["gpt-5", "claude-opus-4.5"] }, specCfg, modelCatalog);
     expect(res.modelInEffect.M).toBe(0.85);
     expect(res.modelInEffect.model?.id).toBe("claude-opus-4.5");
-    res = calculate({ ...base, allowedModelIds: ["gpt-5"], allowedHarnessIds: ["chat-only", "copilot"] }, config, modelCatalog);
+    res = calculate({ ...base, allowedModelIds: ["gpt-5"], allowedHarnessIds: ["chat-only", "copilot"] }, specCfg, modelCatalog);
     expect(res.modelInEffect.M).toBe(0.5);
     expect(res.H).toBe(0.75);
   });
 
   it("an override replaces every line's gain for that role and drives the AI timeline", () => {
-    const res = calculate({ ...workedExample(), overrides: { Dev: 2.5 } }, config, modelCatalog);
+    const res = calculate({ ...workedExample(), overrides: { Dev: 2.5 } }, specCfg, modelCatalog);
     const dev = res.roles.find((r) => r.role === "Dev")!;
     expect(dev.overridden).toBe(true);
     expect(dev.appliedGain).toBeCloseTo(2.5, 12);
@@ -241,7 +251,7 @@ describe("inputs in effect and overrides", () => {
   it("recalculates well under 200 ms", () => {
     const input = workedExample();
     const t0 = performance.now();
-    for (let i = 0; i < 100; i++) calculate(input, config, modelCatalog);
+    for (let i = 0; i < 100; i++) calculate(input, specCfg, modelCatalog);
     expect((performance.now() - t0) / 100).toBeLessThan(200);
   });
 });
@@ -254,7 +264,7 @@ describe("model catalog (adFactory Model Comparison study)", () => {
     expect(borderlineNative.sort()).toEqual(["claude-opus-4.5", "glm-5.2"]);
     // The study puts gemini-3.1-pro at the AI Native bar on one benchmark but says to treat it as AI Assisted.
     expect(modelCatalog.find((m) => m.id === "gemini-3.1-pro")?.tier).toBe("AI Assisted");
-    expect(calculate({ ...workedExample(), allowedModelIds: ["gemini-3.1-pro"] }, config, modelCatalog).modelInEffect.M).toBe(0.5);
+    expect(calculate({ ...workedExample(), allowedModelIds: ["gemini-3.1-pro"] }, specCfg, modelCatalog).modelInEffect.M).toBe(0.5);
     // Every non-Unproven model carries the benchmark score that placed it.
     for (const m of modelCatalog) if (m.tier !== "Unproven") expect(m.score).toBeTruthy();
   });
