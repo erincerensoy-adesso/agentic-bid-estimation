@@ -49,7 +49,7 @@ export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dis
     if (s === "overridden") counts.overridden++;
     if (s === "missing") counts.missing++;
   }
-  const canRerun = (rfpFiles.current?.length ?? 0) > 0 && state.prefill.state !== "running";
+  const canRerun = ((rfpFiles.current?.length ?? 0) > 0 || state.context.trim() !== "") && state.prefill.state !== "running";
 
   return (
     <section>
@@ -166,13 +166,14 @@ export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dis
             ) : (
               <p className="side-text">No RFP uploaded. Upload one under Initials to get suggested answers.</p>
             )}
+            {state.context.trim() && <p className="side-text small">Context from Initials is used too ({state.context.trim().length.toLocaleString("en-US")} characters).</p>}
             <dl className="prefill-counts">
               <div className="c-llm"><dt>Suggested</dt><dd>{counts.llm}</dd></div>
               <div className="c-over"><dt>Overridden</dt><dd>{counts.overridden}</dd></div>
               <div className="c-miss"><dt>Not in RFP</dt><dd>{counts.missing}</dd></div>
             </dl>
             <PrefillNotice status={state.prefill} />
-            <button className="btn icon" disabled={!canRerun} onClick={() => void runPrefill(rfpFiles.current ?? [], dispatch)}>
+            <button className="btn icon" disabled={!canRerun} onClick={() => void runPrefill(rfpFiles.current ?? [], state.context, dispatch)}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M20 12a8 8 0 1 1-2.3-5.6" /><path d="M20 4v5h-5" />
               </svg>

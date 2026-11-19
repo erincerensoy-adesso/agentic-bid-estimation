@@ -3,7 +3,7 @@
 import { useId, useState, type Dispatch, type RefObject } from "react";
 import { config } from "@/lib/config";
 import { reportFileName } from "@/lib/fileName";
-import type { Action, BidState } from "@/lib/state";
+import { CONTEXT_MAX, type Action, type BidState } from "@/lib/state";
 import { runPrefill } from "../runPrefill";
 
 const MAX = 50 * 1024 * 1024;
@@ -28,8 +28,14 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
   const [fileError, setFileError] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);
   const inputId = useId();
+  const ctxId = useId();
   const inMemory = rfpFiles.current ?? [];
-  const canRetry = inMemory.length > 0 && state.prefill.state !== "running";
+  const running = state.prefill.state === "running";
+  const ctx = state.context.trim();
+  const hasSource = inMemory.length > 0 || ctx !== "";
+  const canRetry = hasSource && !running;
+  // Context edited since the last finished run (or never run with it): offer to run again.
+  const ctxStale = state.prefill.state === "done" ? (state.prefill.context ?? "") !== ctx : state.prefill.state === "idle" && ctx !== "";
 
   function acceptFiles(files: File[]) {
     if (files.length === 0) return;
@@ -45,14 +51,14 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
     setFileError(null);
     rfpFiles.current = files;
     dispatch({ type: "setRfpFiles", names: files.map((f) => f.name) });
-    void runPrefill(files, dispatch);
+    void runPrefill(files, state.context, dispatch);
   }
 
   function remove(name: string) {
     const remaining = inMemory.filter((f) => f.name !== name);
     rfpFiles.current = remaining;
     dispatch({ type: "setRfpFiles", names: state.rfpFileNames.filter((n) => n !== name) });
-    if (remaining.length > 0) void runPrefill(remaining, dispatch);
+    if (remaining.length > 0 || ctx) void runPrefill(remaining, state.context, dispatch);
     else dispatch({ type: "setPrefill", status: { state: "idle" } });
   }
 
@@ -63,7 +69,7 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
     <section>
       <div className="page-title survey-title">
         <h1>Initials</h1>
-        <p>Name the bid and upload the RFP. The RFP is read once to suggest answers for the Domain Complexity questions.</p>
+        <p>Name the bid, upload the RFP and add any context the RFP does not say. Both are read to suggest answers for the Domain Complexity questions.</p>
       </div>
 
       <div className="initials">
@@ -88,7 +94,7 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
 
         <section className="panel rfp-card" aria-labelledby="rfp-h">
           <div className="panel-title">
-            <h2 id="rfp-h">RFP</h2>
+            <h2 id="rfp-h">RFP and context</h2>
             <p>PDF or DOCX, one or more files, 50 MB in total. Read once, never stored.</p>
           </div>
 
@@ -136,11 +142,38 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
             </ul>
           )}
 
+          <div className="field context-field">
+            <label htmlFor={ctxId}>Context <span className="optional">optional</span></label>
+            <p className="field-help" id={`${ctxId}-help`}>
+              What the team knows beyond the RFP: client background, constraints, notes from calls. Kept in this browser and
+              added to the Excel report. Do not paste secrets or personal data.
+            </p>
+            <textarea
+              id={ctxId}
+              aria-describedby={`${ctxId}-help ${ctxId}-count`}
+              rows={6}
+              maxLength={CONTEXT_MAX}
+              value={state.context}
+              onChange={(e) => dispatch({ type: "setContext", context: e.target.value })}
+              placeholder="e.g. The client confirmed in the kick-off call that the legacy core banking API stays; only the mobile front end and BFF are in scope. Go-live must be before the Q3 regulatory deadline."
+            />
+            <div className="context-foot">
+              <span id={`${ctxId}-count`} className="side-text small">
+                {state.context.length.toLocaleString("en-US")} / {CONTEXT_MAX.toLocaleString("en-US")} characters
+              </span>
+              {ctxStale && !running && (
+                <button className="btn primary" onClick={() => void runPrefill(inMemory, state.context, dispatch)}>
+                  {state.prefill.state === "done" ? "Re-run with this context" : "Suggest answers"}
+                </button>
+              )}
+            </div>
+          </div>
+
           {state.prefill.state === "running" && (
             <div className="status-card info" role="status">
               <span className="spinner" aria-hidden="true" />
               <span className="status-text">
-                <strong>Reading the RFP and suggesting answers…</strong>
+                <strong>Reading the {inMemory.length ? "RFP" : "context"}{inMemory.length && ctx ? " and context" : ""} and suggesting answers…</strong>
                 <span>This can take a minute. You can continue with Staffing &amp; Skills meanwhile.</span>
               </span>
             </div>
@@ -149,8 +182,8 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
             <div className="status-card ok" role="status">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>
               <span className="status-text">
-                <strong>{suggested} of {config.survey.length} questions suggested from the RFP</strong>
-                <span>{open === 0 ? "Every question has an answer." : `${open} ${open === 1 ? "is" : "are"} not covered by the RFP and need${open === 1 ? "s" : ""} your answer.`}</span>
+                <strong>{suggested} of {config.survey.length} questions suggested from the {state.prefill.context ? "RFP and context" : "RFP"}</strong>
+                <span>{open === 0 ? "Every question has an answer." : `${open} ${open === 1 ? "is" : "are"} not covered and need${open === 1 ? "s" : ""} your answer.`}</span>
               </span>
               <button className="link-btn" onClick={() => onGoTo(3)}>Review in Domain Complexity</button>
             </div>
@@ -162,7 +195,7 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
                 <strong>The RFP pre-fill did not finish</strong>
                 <span>{state.prefill.message ?? "You can answer the questions yourself, or try again."}</span>
               </span>
-              {canRetry && <button className="btn" onClick={() => void runPrefill(inMemory, dispatch)}>Try again</button>}
+              {canRetry && <button className="btn" onClick={() => void runPrefill(inMemory, state.context, dispatch)}>Try again</button>}
             </div>
           )}
         </section>

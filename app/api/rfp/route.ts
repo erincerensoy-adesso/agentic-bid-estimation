@@ -1,16 +1,22 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { config } from "@/lib/config";
+import { CONTEXT_MAX } from "@/lib/state";
 import { llmConfigured, PrefillError, prefillSurvey } from "@/lib/prefill";
 import { extractRfpText, RFP_MAX_TOTAL_BYTES, RfpError, type RfpDocument } from "@/lib/rfp";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
-/** Extracts RFP text in memory and asks the LLM for survey suggestions. Nothing is stored. */
+/** Extracts RFP text in memory and asks the LLM for survey suggestions, using the bid context too. Nothing is stored. */
 export async function POST(req: Request) {
   const form = await req.formData();
   const files = form.getAll("files").filter((f): f is File => f instanceof File);
-  if (files.length === 0) return Response.json({ error: "No RFP file uploaded." }, { status: 400 });
+  const raw = form.get("context");
+  const context = typeof raw === "string" ? raw.trim() : "";
+  if (files.length === 0 && !context) return Response.json({ error: "Upload an RFP or write some context first." }, { status: 400 });
+  if (context.length > CONTEXT_MAX) {
+    return Response.json({ error: `The context is longer than ${CONTEXT_MAX.toLocaleString("en-US")} characters.` }, { status: 413 });
+  }
   const total = files.reduce((a, f) => a + f.size, 0);
   if (total > RFP_MAX_TOTAL_BYTES) {
     return Response.json({ error: "The RFP files exceed the 50 MB total limit." }, { status: 413 });
@@ -30,7 +36,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const suggestions = await prefillSurvey(docs, config);
+    const suggestions = await prefillSurvey(docs, config, context);
     return Response.json({ suggestions });
   } catch (e) {
     let msg = "The RFP pre-fill failed. Answer the survey manually.";

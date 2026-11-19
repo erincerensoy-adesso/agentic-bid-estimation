@@ -63,6 +63,16 @@ continue manually if the call fails.
 - **WHEN** no API key is configured or the call fails
 - **THEN** the survey stays empty with a notice and the flow continues
 
+### Requirement: Bid context
+Initials SHALL offer an optional free-text Context field (at most 20,000 characters) for what the team knows beyond
+the RFP. The context SHALL be kept in the browser, sent to the pre-fill with the RFP as untrusted data (either source
+alone is enough), cited with the location "Context" when it supports an answer, and written to the Inputs sheet of the
+Excel report.
+
+#### Scenario: Context edited after a pre-fill
+- **WHEN** the operator changes the context after a pre-fill finished
+- **THEN** the system offers to re-run the pre-fill with the new context and does not re-run it on its own
+
 ### Requirement: Excel report
 The system SHALL export an .xlsx named `<bid-name>_estimation_<YYYY-MM-DD>.xlsx` with Summary, Role Comparison,
 Resource Lines, AI Timeline, Token Cost, Inputs and Parameters sheets, writing numbers as numbers.

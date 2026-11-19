@@ -8,6 +8,7 @@
 - [x] 1.7 Unit tests: worked example, boundary checks, overrides, parser, report
 - [x] 1.8 README with stack and reason
 - [x] 1.12 AI cost by Claude plan (Enterprise, Team, Individual)
+- [x] 1.13 Free-text bid context on Initials, used by the pre-fill and written to the report
 - [x] 1.11 Survey: plain-language answer scale, question explanations, Q1/Q2 consistency rule
 - [ ] 1.9 Verify the parser against the real Timeline Template file
 - [ ] 1.10 Verify the RFP pre-fill against a real RFP with an API key

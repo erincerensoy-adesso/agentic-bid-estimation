@@ -6,12 +6,19 @@ import type { AnswerSource, Capability, Level, LlmSuggestion, QuestionId, Role, 
 export interface PrefillStatus {
   state: "idle" | "running" | "done" | "error";
   message?: string;
+  /** The context text the last finished run used, to flag later edits. */
+  context?: string;
 }
+
+/** Longest bid context accepted, in characters. */
+export const CONTEXT_MAX = 20_000;
 
 export interface BidState {
   bidName: string;
   clientName: string;
   rfpFileNames: string[];
+  /** Free-text bid context from the team (client background, constraints, call notes). Sent to the pre-fill with the RFP. */
+  context: string;
   prefill: PrefillStatus;
   timeline: Timeline | null;
   allowedModelIds: string[];
@@ -26,6 +33,7 @@ export const initialState: BidState = {
   bidName: "",
   clientName: "",
   rfpFileNames: [],
+  context: "",
   prefill: { state: "idle" },
   timeline: null,
   allowedModelIds: [],
@@ -40,6 +48,7 @@ export type Action =
   | { type: "load"; state: BidState }
   | { type: "setMeta"; bidName?: string; clientName?: string }
   | { type: "setRfpFiles"; names: string[] }
+  | { type: "setContext"; context: string }
   | { type: "setPrefill"; status: PrefillStatus }
   | { type: "applySuggestions"; suggestions: Record<string, LlmSuggestion | "not_found"> }
   | { type: "setTimeline"; timeline: Timeline | null }
@@ -75,6 +84,8 @@ export function reducer(s: BidState, a: Action): BidState {
       return { ...s, bidName: a.bidName ?? s.bidName, clientName: a.clientName ?? s.clientName };
     case "setRfpFiles":
       return { ...s, rfpFileNames: a.names };
+    case "setContext":
+      return { ...s, context: a.context.slice(0, CONTEXT_MAX) };
     case "setPrefill":
       return { ...s, prefill: a.status };
     case "applySuggestions": {

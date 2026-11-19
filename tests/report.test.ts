@@ -17,7 +17,7 @@ describe("Excel report", () => {
     const levels = [2, 2, 2, 2, 1, 0, 1, 1, 1, 0, 1, 2] as const;
     const answers = Object.fromEntries(levels.map((level, i) => [`Q${i + 1}` as QuestionId, { level, source: "operator" as const }]));
     const buf = await buildReport(
-      { bidName: "Acme Portal", clientName: "Acme", timeline, allowedModelIds: ["claude-opus-5"], allowedHarnessIds: ["aifactory-claude-code"], answers, overrides: { QA: 3 }, pricingPlan: "team" },
+      { bidName: "Acme Portal", clientName: "Acme", context: "Legacy core API stays in place.", timeline, allowedModelIds: ["claude-opus-5"], allowedHarnessIds: ["aifactory-claude-code"], answers, overrides: { QA: 3 }, pricingPlan: "team" },
       config,
       modelCatalog,
       new Date("2026-11-16T10:00:00Z"),
@@ -41,6 +41,9 @@ describe("Excel report", () => {
     expect(planRow.getCell(2).value).toBe(config.pricing.team.label);
     const ai = wb.getWorksheet("AI Cost")!;
     expect(ai.getRows(1, ai.rowCount)!.some((r) => r.getCell(1).value === config.pricing.individual.label)).toBe(true);
+    const inp = wb.getWorksheet("Inputs")!;
+    expect(inp.getRow(1).getCell(1).value).toBe("Bid context");
+    expect(inp.getRow(2).getCell(1).value).toBe("Legacy core API stays in place.");
     expect(reportFileName("Acme Portal", new Date("2026-11-16T10:00:00Z"))).toBe("Acme-Portal_estimation_2026-11-16.xlsx");
   });
 });

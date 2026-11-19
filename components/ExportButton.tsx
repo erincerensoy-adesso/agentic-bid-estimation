@@ -19,6 +19,7 @@ export function ExportButton({ state, result }: { state: BidState; result: CalcR
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bidName: state.bidName,
+          context: state.context,
           clientName: state.clientName,
           timeline: state.timeline,
           allowedModelIds: state.allowedModelIds,

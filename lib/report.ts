@@ -7,6 +7,8 @@ import type { CalcInput, EstimationConfig, ModelEntry, PricingPlan, QuestionId }
 export interface ReportInput extends CalcInput {
   bidName: string;
   clientName: string;
+  /** Free-text bid context from Initials. */
+  context?: string;
   /** Claude plan used for the headline AI cost; defaults to Enterprise. */
   pricingPlan?: PricingPlan;
 }
@@ -208,6 +210,15 @@ export async function buildReport(
   // Inputs
   const inp = wb.addWorksheet("Inputs");
   widths(inp, [40, 24, 16, 22, 50, 22, 14, 60]);
+  const context = (input.context ?? "").trim().slice(0, 20_000);
+  if (context) {
+    inp.addRow(["Bid context"]).font = { bold: true };
+    const row = inp.addRow([context]);
+    inp.mergeCells(row.number, 1, row.number, 8);
+    row.getCell(1).alignment = { wrapText: true, vertical: "top" };
+    row.height = Math.min(409, 15 * Math.max(2, Math.ceil(context.length / 180) + context.split("\n").length));
+    inp.addRow([]);
+  }
   inp.addRow(["Allowed models"]).font = { bold: true };
   headerRow(inp, ["Model", "Vendor (origin)", "Licence", "Tier", "Borderline", "Benchmark", "Score", "Notes"]);
   for (const id of input.allowedModelIds) {
@@ -223,7 +234,7 @@ export async function buildReport(
   }
   inp.addRow([]);
   inp.addRow(["Complexity survey"]).font = { bold: true };
-  headerRow(inp, ["Question", "Score", "Source", "Answer", "RFP excerpt"]);
+  headerRow(inp, ["Question", "Score", "Source", "Answer", "RFP / context excerpt"]);
   for (const q of cfg.survey) {
     const a = input.answers[q.id as QuestionId];
     const level = a?.level ?? null;
