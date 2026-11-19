@@ -4,7 +4,7 @@ import type { Dispatch, RefObject } from "react";
 import { complexityScore, gainPotential } from "@/lib/calc";
 import { config } from "@/lib/config";
 import type { Action, BidState } from "@/lib/state";
-import { availability } from "@/lib/survey";
+import { availability, questionLabel } from "@/lib/survey";
 import type { Level, QuestionId, SurveyAnswer } from "@/lib/types";
 import { PrefillNotice } from "../PrefillNotice";
 import { runPrefill } from "../runPrefill";
@@ -78,10 +78,10 @@ export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dis
                   const avail = availability(id as QuestionId, state.answers, config);
                   return (
                     <fieldset key={id} className={`q-card ${a?.level == null ? "unanswered" : ""}`}>
-                      <legend className="sr-only">{q.id} {q.question}</legend>
+                      <legend className="sr-only">{questionLabel(config, q.id)} {q.question}</legend>
                       <div className="q-head">
                         <div className="q-heading">
-                          <div><span className="qid">{q.id}</span> <span className="qtext">{q.question}</span></div>
+                          <div><span className="qid">{questionLabel(config, q.id)}</span> <span className="qtext">{q.question}</span></div>
                           <span className="qhelp">{q.help}</span>
                         </div>
                         <Badge a={a} />

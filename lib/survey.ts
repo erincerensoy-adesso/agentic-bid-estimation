@@ -23,9 +23,27 @@ function sourceFor(level: Level | null, a?: SurveyAnswer): AnswerSource {
   return level === a.suggestion.level ? "llm" : "llm-overridden";
 }
 
+/**
+ * Questions in the order the survey shows them (by group, then any ungrouped ones).
+ * Question ids (Q1–Q12) stay fixed because weights, links and saved answers use them;
+ * the operator sees numbers that follow this order instead.
+ */
+export function surveyOrder(cfg: EstimationConfig): EstimationConfig["survey"] {
+  const byId = new Map(cfg.survey.map((q) => [q.id, q]));
+  const grouped = cfg.surveyGroups.flatMap((g) => g.questions.map((id) => byId.get(id)).filter((q): q is NonNullable<typeof q> => Boolean(q)));
+  const seen = new Set(grouped.map((q) => q.id));
+  return [...grouped, ...cfg.survey.filter((q) => !seen.has(q.id))];
+}
+
+/** The label the operator sees for a question, e.g. "Q5" for the fifth question shown. */
+export function questionLabel(cfg: EstimationConfig, id: string): string {
+  const i = surveyOrder(cfg).findIndex((q) => q.id === id);
+  return i < 0 ? id : `Q${i + 1}`;
+}
+
 function label(cfg: EstimationConfig, q: QuestionId, level: Level): string {
   const sq = cfg.survey.find((x) => x.id === q);
-  return sq ? `${q} "${sq.levels[level]}"` : q;
+  return sq ? `${questionLabel(cfg, q)} "${sq.levels[level]}"` : q;
 }
 
 export function availability(q: QuestionId, answers: Answers, cfg: EstimationConfig): LevelAvailability {
@@ -36,13 +54,13 @@ export function availability(q: QuestionId, answers: Answers, cfg: EstimationCon
     if (p === link.level) {
       return {
         allowed: new Set([link.level]),
-        reason: `Set by ${label(cfg, link.primary, link.level)}. Change ${link.primary} to choose another answer.`,
+        reason: `Set by ${label(cfg, link.primary, link.level)}. Change ${questionLabel(cfg, link.primary)} to choose another answer.`,
         locked: true,
       };
     }
     return {
       allowed: new Set(ALL.filter((l) => l !== link.level)),
-      reason: `${label(cfg, q, link.level)} is unavailable because ${link.primary} reports ${cfg.survey.find((x) => x.id === link.primary)?.levels[p]}.`,
+      reason: `${label(cfg, q, link.level)} is unavailable because ${questionLabel(cfg, link.primary)} reports ${cfg.survey.find((x) => x.id === link.primary)?.levels[p]}.`,
       locked: false,
     };
   }

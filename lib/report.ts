@@ -2,6 +2,7 @@
 import ExcelJS from "exceljs";
 import { calculate } from "./calc";
 import { PLANS } from "./pricing";
+import { questionLabel, surveyOrder } from "./survey";
 import type { CalcInput, EstimationConfig, ModelEntry, PricingPlan, QuestionId } from "./types";
 
 export interface ReportInput extends CalcInput {
@@ -235,11 +236,11 @@ export async function buildReport(
   inp.addRow([]);
   inp.addRow(["Complexity survey"]).font = { bold: true };
   headerRow(inp, ["Question", "Score", "Source", "Answer", "RFP / context excerpt"]);
-  for (const q of cfg.survey) {
+  for (const q of surveyOrder(cfg)) {
     const a = input.answers[q.id as QuestionId];
     const level = a?.level ?? null;
     inp.addRow([
-      `${q.id} ${q.question}`,
+      `${questionLabel(cfg, q.id)} ${q.question}`,
       level == null ? null : level / 3,
       a?.source ?? "",
       level == null ? "" : q.levels[level],
@@ -264,7 +265,7 @@ export async function buildReport(
   p.addRow([]);
   p.addRow(["Weights matrix"]).font = { bold: true };
   headerRow(p, ["Question", ...cfg.roles]);
-  for (const q of cfg.survey) p.addRow([`${q.id} ${q.question}`, ...cfg.roles.map((r) => cfg.weights[q.id][r])]);
+  for (const q of surveyOrder(cfg)) p.addRow([`${questionLabel(cfg, q.id)} ${q.question}`, ...cfg.roles.map((r) => cfg.weights[q.id][r])]);
   p.addRow([]);
   p.addRow(["Model tier factors (M)"]).font = { bold: true };
   for (const [k, v] of Object.entries(cfg.modelTierFactors)) p.addRow([k, v]);

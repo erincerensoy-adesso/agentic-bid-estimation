@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { calculate } from "../lib/calc";
 import { config, modelCatalog } from "../lib/config";
 import { initialState, reducer } from "../lib/state";
-import { availability, contradictions, enforceLinks, setAnswer } from "../lib/survey";
+import { availability, contradictions, enforceLinks, questionLabel, setAnswer, surveyOrder } from "../lib/survey";
 import type { CalcInput, LlmSuggestion } from "../lib/types";
 
 const ans = (level: 0 | 1 | 2 | 3) => ({ level, source: "operator" as const });
@@ -75,5 +75,15 @@ describe("survey groups and not-found questions", () => {
     expect(s.answers.Q10).toEqual({ level: null, source: "operator", notFound: true });
     s = reducer(s, { type: "setAnswer", q: "Q10", level: 1 });
     expect(s.answers.Q10).toMatchObject({ level: 1, source: "operator", notFound: true });
+  });
+});
+
+describe("question numbering", () => {
+  it("numbers questions in the order the survey shows them, keeping ids stable", () => {
+    const order = surveyOrder(config).map((q) => q.id);
+    expect(order).toHaveLength(config.survey.length);
+    expect(new Set(order).size).toBe(config.survey.length);
+    expect(order.map((id) => questionLabel(config, id))).toEqual(order.map((_, i) => `Q${i + 1}`));
+    expect(questionLabel(config, "Q8")).toBe("Q5"); // third in "Regulation and risk", after Q1–Q4
   });
 });
