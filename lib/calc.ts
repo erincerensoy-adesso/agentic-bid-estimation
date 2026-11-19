@@ -9,6 +9,7 @@ import type {
   Capability,
   EstimationConfig,
   HarnessEntry,
+  Level,
   ModelEntry,
   QuestionId,
   ResourceLine,
@@ -140,6 +141,28 @@ export function complexityScore(role: Role, answers: CalcInput["answers"], cfg: 
     den += w;
   }
   return den === 0 ? 0 : num / den;
+}
+
+export interface QuestionRoleEffect {
+  role: Role;
+  /** This question's weight for the role (0 = no effect). */
+  weight: number;
+  /** Share of the role's total weight, 0..1. */
+  share: number;
+  /** Gain potential for each of the four answers, with the other answers as they are. */
+  gains: [number, number, number, number];
+}
+
+/** What each answer to one question would do to each role's gain potential, holding the other answers. */
+export function questionEffect(qid: QuestionId, answers: CalcInput["answers"], cfg: EstimationConfig): QuestionRoleEffect[] {
+  return cfg.roles.map((role) => {
+    const weight = cfg.weights[qid]?.[role] ?? 0;
+    const total = cfg.survey.reduce((a, q) => a + (cfg.weights[q.id]?.[role] ?? 0), 0);
+    const gains = ([0, 1, 2, 3] as Level[]).map((level) =>
+      gainPotential(complexityScore(role, { ...answers, [qid]: { level, source: "operator" } }, cfg), role, cfg),
+    ) as QuestionRoleEffect["gains"];
+    return { role, weight, share: total ? weight / total : 0, gains };
+  });
 }
 
 /** Geometric interpolation from the role's maxGain (complexity 0) to its minPotential (complexity 1). */

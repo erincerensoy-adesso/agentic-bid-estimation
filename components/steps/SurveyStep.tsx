@@ -1,7 +1,7 @@
 "use client";
 
-import type { Dispatch, RefObject } from "react";
-import { complexityScore, gainPotential } from "@/lib/calc";
+import { useState, type Dispatch, type RefObject } from "react";
+import { complexityScore, gainPotential, questionEffect } from "@/lib/calc";
 import { config } from "@/lib/config";
 import type { Action, BidState } from "@/lib/state";
 import { availability, questionLabel } from "@/lib/survey";
@@ -36,6 +36,67 @@ function Meter({ level }: { level: number }) {
   );
 }
 
+const pct = new Intl.NumberFormat("en-US", { style: "percent", maximumFractionDigits: 0, signDisplay: "exceptZero" });
+
+/** Per-question table: the gain potential of every role under each of the four answers. */
+function QuestionEffect({ id, answers, chosen, disabled }: {
+  id: QuestionId;
+  answers: BidState["answers"];
+  chosen: Level | null;
+  disabled: Set<number>;
+}) {
+  const scale = config.surveyScaleLabels;
+  const rows = questionEffect(id, answers, config).sort((a, b) => b.weight - a.weight || b.share - a.share);
+  const max = Math.max(...config.roles.map((r) => config.gainRanges[r].maxGain));
+  return (
+    <div className="q-effect">
+      <p className="q-effect-note">
+        Gain potential per role for each answer, with your other answers as they are and full AI enablement.
+        {chosen == null && " Not answered yet: unanswered questions count as simplest."}
+      </p>
+      <div className="table-wrap">
+        <table className="effect-table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Weight</th>
+              {scale.map((label, i) => (
+                <th key={label} className={`num ${chosen === i ? "chosen" : ""}`}>
+                  {label}{chosen === i && <span className="sr-only"> (your answer)</span>}
+                </th>
+              ))}
+              <th className="num">Simplest → most complex</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => {
+              const change = r.gains[3] / r.gains[0] - 1;
+              return (
+                <tr key={r.role} className={r.weight === 0 ? "no-effect" : ""}>
+                  <th scope="row">{r.role}</th>
+                  <td>
+                    <span className="w-dots" role="img" aria-label={`Weight ${r.weight} of 3, ${Math.round(r.share * 100)}% of the role’s complexity`}>
+                      {[1, 2, 3].map((d) => <i key={d} className={d <= r.weight ? "on" : ""} />)}
+                    </span>
+                    <span className="w-share">{Math.round(r.share * 100)}%</span>
+                  </td>
+                  {r.gains.map((g, i) => (
+                    <td key={i} className={`num ${chosen === i ? "chosen" : ""} ${disabled.has(i) ? "off" : ""}`}>
+                      <span className="eg-bar" aria-hidden="true"><span style={{ width: `${(g / max) * 100}%` }} /></span>
+                      {g.toFixed(2)}x
+                    </td>
+                  ))}
+                  <td className={`num change ${change < -0.1 ? "big" : ""}`}>{r.weight ? pct.format(change) : "no effect"}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dispatch: Dispatch<Action>; rfpFiles: RefObject<File[]> }) {
   const scale = config.surveyScaleLabels;
   const byId = new Map(config.survey.map((q) => [q.id, q]));
@@ -49,6 +110,7 @@ export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dis
     if (s === "overridden") counts.overridden++;
     if (s === "missing") counts.missing++;
   }
+  const [showEffect, setShowEffect] = useState<Record<string, boolean>>({});
   const canRerun = ((rfpFiles.current?.length ?? 0) > 0 || state.context.trim() !== "") && state.prefill.state !== "running";
 
   return (
@@ -69,7 +131,19 @@ export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dis
               <section key={g.name} className="q-group" aria-labelledby={`grp-${g.name}`}>
                 <div className="q-group-head">
                   <h2 id={`grp-${g.name}`}>{g.name}</h2>
-                  <span>{done} of {g.questions.length} answered</span>
+                  <span className="q-group-meta">
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={Boolean(showEffect[g.name])}
+                      className="switch"
+                      onClick={() => setShowEffect({ ...showEffect, [g.name]: !showEffect[g.name] })}
+                    >
+                      <span className="switch-track" aria-hidden="true"><span className="switch-thumb" /></span>
+                      Show effect on roles
+                    </button>
+                    <span>{done} of {g.questions.length} answered</span>
+                  </span>
                 </div>
                 {g.questions.map((id) => {
                   const q = byId.get(id)!;
@@ -118,6 +192,14 @@ export function SurveyStep({ state, dispatch, rfpFiles }: { state: BidState; dis
                           </svg>
                           {avail.reason}
                         </p>
+                      )}
+                      {showEffect[g.name] && (
+                        <QuestionEffect
+                          id={id as QuestionId}
+                          answers={state.answers}
+                          chosen={a?.level ?? null}
+                          disabled={new Set([0, 1, 2, 3].filter((i) => !avail.allowed.has(i as Level)))}
+                        />
                       )}
                       {sug && (
                         <div className="q-excerpt">

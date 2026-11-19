@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculate } from "../lib/calc";
+import { calculate, questionEffect } from "../lib/calc";
 import { config, modelCatalog } from "../lib/config";
 import { initialState, reducer } from "../lib/state";
 import { availability, contradictions, enforceLinks, questionLabel, setAnswer, surveyOrder } from "../lib/survey";
@@ -85,5 +85,18 @@ describe("question numbering", () => {
     expect(new Set(order).size).toBe(config.survey.length);
     expect(order.map((id) => questionLabel(config, id))).toEqual(order.map((_, i) => `Q${i + 1}`));
     expect(questionLabel(config, "Q8")).toBe("Q5"); // third in "Regulation and risk", after Q1–Q4
+  });
+});
+
+describe("question effect", () => {
+  it("shows lower gain potential for more complex answers, only for weighted roles", () => {
+    const rows = questionEffect("Q6", {}, config);
+    expect(rows).toHaveLength(config.roles.length);
+    for (const r of rows) {
+      if (r.weight === 0) expect(r.gains[3]).toBeCloseTo(r.gains[0]);
+      else for (let i = 1; i < 4; i++) expect(r.gains[i]).toBeLessThan(r.gains[i - 1]);
+    }
+    const dev = rows.find((r) => r.role === "Dev")!;
+    expect(dev.gains[0]).toBeCloseTo(config.gainRanges.Dev.maxGain); // everything else unanswered = simplest
   });
 });

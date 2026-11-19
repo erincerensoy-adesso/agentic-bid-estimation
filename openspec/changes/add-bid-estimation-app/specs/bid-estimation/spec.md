@@ -63,6 +63,16 @@ continue manually if the call fails.
 - **WHEN** no API key is configured or the call fails
 - **THEN** the survey stays empty with a notice and the flow continues
 
+### Requirement: Question effect on roles
+Each Domain Complexity section SHALL have a "Show effect on roles" switch, off by default. When on, every question in
+the section SHALL show, per role, the question's weight and share of the role's complexity, and the role's gain
+potential under each of the four answers with the other answers held as they are, marking the chosen answer.
+
+#### Scenario: Comparing answers
+- **WHEN** the operator turns on the switch for a section
+- **THEN** each question in it shows how much each role's gain potential would change from the simplest to the most
+  complex answer
+
 ### Requirement: Bid context
 Initials SHALL offer an optional free-text Context field (at most 20,000 characters) for what the team knows beyond
 the RFP. The context SHALL be kept in the browser, sent to the pre-fill with the RFP as untrusted data (either source
