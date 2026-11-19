@@ -69,9 +69,16 @@ the RFP. The context SHALL be kept in the browser, sent to the pre-fill with the
 alone is enough), cited with the location "Context" when it supports an answer, and written to the Inputs sheet of the
 Excel report.
 
-#### Scenario: Context edited after a pre-fill
-- **WHEN** the operator changes the context after a pre-fill finished
-- **THEN** the system offers to re-run the pre-fill with the new context and does not re-run it on its own
+The pre-fill SHALL run only when the operator selects Suggest answers; uploading or removing files and editing the
+context SHALL NOT start it.
+
+#### Scenario: Files uploaded
+- **WHEN** the operator uploads RFP files
+- **THEN** nothing is sent to the LLM until they select Suggest answers
+
+#### Scenario: Sources changed after a pre-fill
+- **WHEN** the operator changes the files or the context after a pre-fill finished
+- **THEN** the system offers Re-run with changes and does not re-run it on its own
 
 ### Requirement: Excel report
 The system SHALL export an .xlsx named `<bid-name>_estimation_<YYYY-MM-DD>.xlsx` with Summary, Role Comparison,

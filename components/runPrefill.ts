@@ -20,7 +20,7 @@ export async function runPrefill(files: File[], context: string, dispatch: Dispa
     const found = Object.values(body.suggestions).filter((s) => s !== "not_found").length;
     dispatch({
       type: "setPrefill",
-      status: { state: "done", context: ctx, message: `${found} of ${Object.keys(body.suggestions).length} questions suggested from the RFP and context.` },
+      status: { state: "done", context: ctx, files: files.map((f) => f.name), message: `${found} of ${Object.keys(body.suggestions).length} questions suggested from the RFP and context.` },
     });
   } catch {
     dispatch({ type: "setPrefill", status: { state: "error", message: "The RFP pre-fill could not reach the server. Answer the survey manually." } });

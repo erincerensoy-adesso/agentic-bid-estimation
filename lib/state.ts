@@ -8,6 +8,8 @@ export interface PrefillStatus {
   message?: string;
   /** The context text the last finished run used, to flag later edits. */
   context?: string;
+  /** The RFP file names the last finished run used, to flag later changes. */
+  files?: string[];
 }
 
 /** Longest bid context accepted, in characters. */

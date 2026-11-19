@@ -33,9 +33,14 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
   const running = state.prefill.state === "running";
   const ctx = state.context.trim();
   const hasSource = inMemory.length > 0 || ctx !== "";
-  const canRetry = hasSource && !running;
-  // Context edited since the last finished run (or never run with it): offer to run again.
-  const ctxStale = state.prefill.state === "done" ? (state.prefill.context ?? "") !== ctx : state.prefill.state === "idle" && ctx !== "";
+  const canRun = hasSource && !running;
+  const done = state.prefill.state === "done";
+  // Files or context changed since the last finished run.
+  const changed =
+    done &&
+    ((state.prefill.context ?? "") !== ctx ||
+      (state.prefill.files ?? []).join("\n") !== inMemory.map((f) => f.name).join("\n"));
+  const run = () => void runPrefill(inMemory, state.context, dispatch);
 
   function acceptFiles(files: File[]) {
     if (files.length === 0) return;
@@ -51,15 +56,12 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
     setFileError(null);
     rfpFiles.current = files;
     dispatch({ type: "setRfpFiles", names: files.map((f) => f.name) });
-    void runPrefill(files, state.context, dispatch);
   }
 
   function remove(name: string) {
     const remaining = inMemory.filter((f) => f.name !== name);
     rfpFiles.current = remaining;
     dispatch({ type: "setRfpFiles", names: state.rfpFileNames.filter((n) => n !== name) });
-    if (remaining.length > 0 || ctx) void runPrefill(remaining, state.context, dispatch);
-    else dispatch({ type: "setPrefill", status: { state: "idle" } });
   }
 
   const suggested = config.survey.filter((q) => state.answers[q.id]?.suggestion).length;
@@ -69,7 +71,7 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
     <section>
       <div className="page-title survey-title">
         <h1>Initials</h1>
-        <p>Name the bid, upload the RFP and add any context the RFP does not say. Both are read to suggest answers for the Domain Complexity questions.</p>
+        <p>Name the bid, upload the RFP and add any context the RFP does not say. When both are ready, select Suggest answers to pre-fill the Domain Complexity questions.</p>
       </div>
 
       <div className="initials">
@@ -117,7 +119,7 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
               <path d="M12 16V4" /><path d="M7 9l5-5 5 5" /><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
             </svg>
             <strong>Drop RFP files here or <u>browse</u></strong>
-            <span>Adding files replaces the current set and runs the pre-fill again</span>
+            <span>Adding files replaces the current set</span>
           </label>
           {fileError && <div className="notice error">{fileError}</div>}
 
@@ -157,16 +159,30 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
               onChange={(e) => dispatch({ type: "setContext", context: e.target.value })}
               placeholder="e.g. The client confirmed in the kick-off call that the legacy core banking API stays; only the mobile front end and BFF are in scope. Go-live must be before the Q3 regulatory deadline."
             />
-            <div className="context-foot">
-              <span id={`${ctxId}-count`} className="side-text small">
-                {state.context.length.toLocaleString("en-US")} / {CONTEXT_MAX.toLocaleString("en-US")} characters
-              </span>
-              {ctxStale && !running && (
-                <button className="btn primary" onClick={() => void runPrefill(inMemory, state.context, dispatch)}>
-                  {state.prefill.state === "done" ? "Re-run with this context" : "Suggest answers"}
-                </button>
-              )}
-            </div>
+            <p id={`${ctxId}-count`} className="side-text small context-count">
+              {state.context.length.toLocaleString("en-US")} / {CONTEXT_MAX.toLocaleString("en-US")} characters
+            </p>
+          </div>
+
+          <div className="prefill-action">
+            <span className="side-text">
+              {running
+                ? "Suggesting answers…"
+                : !hasSource
+                  ? state.rfpFileNames.length > 0
+                    ? "Upload the RFP again after a page reload, or write some context, to suggest answers."
+                    : "Add the RFP, the context or both, then suggest answers."
+                  : changed
+                    ? "The files or context changed since the last run."
+                    : done
+                      ? "Answers were suggested from the current files and context."
+                      : "Nothing is sent until you select Suggest answers."}
+            </span>
+            {(!done || changed) && state.prefill.state !== "error" && (
+              <button className="btn primary" disabled={!canRun} onClick={run}>
+                {done ? "Re-run with changes" : "Suggest answers"}
+              </button>
+            )}
           </div>
 
           {state.prefill.state === "running" && (
@@ -195,7 +211,7 @@ export function BidStep({ state, dispatch, rfpFiles, onGoTo }: {
                 <strong>The RFP pre-fill did not finish</strong>
                 <span>{state.prefill.message ?? "You can answer the questions yourself, or try again."}</span>
               </span>
-              {canRetry && <button className="btn" onClick={() => void runPrefill(inMemory, state.context, dispatch)}>Try again</button>}
+              {canRun && <button className="btn" onClick={run}>Try again</button>}
             </div>
           )}
         </section>
